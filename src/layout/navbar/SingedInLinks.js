@@ -15,8 +15,13 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
+import HomeIcon from '@material-ui/icons/Home';
+import ReceiptIcon from '@material-ui/icons/Receipt';
+import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import { logout } from '../../store/actions/authActions';
 import { useDispatch } from 'react-redux';
+import { useHistory } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -63,6 +68,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SingedInLinks = () => {
+  const history = useHistory();
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -77,9 +83,39 @@ const SingedInLinks = () => {
 
   const dispatch = useDispatch();
 
-  const handleClick = (e) => {
+  const cleanLocalStorage = () => {
+    if(localStorage.getItem("to")) {
+      localStorage.removeItem("to");
+    }
+  }
+
+  const logout = (e) => {
     e.preventDefault();
+    cleanLocalStorage();
     dispatch(logout());
+  }
+
+  const toHome = (e) => {
+    cleanLocalStorage();
+    history.push("/");
+  }
+
+  const toCurrency = (e) => {
+    cleanLocalStorage();
+    history.push("/currency");
+  }
+
+  const toReceipt = (e) => {
+    cleanLocalStorage();
+    localStorage.setItem("to", "/receipt");
+    history.push("/check-currency");
+
+  }
+
+  const toWallet = (e) =>  {
+    cleanLocalStorage()
+    localStorage.setItem("to", "/wallet");
+    history.push("/check-currency");
   }
 
   return (
@@ -120,7 +156,23 @@ const SingedInLinks = () => {
         </div>
         <Divider />
         <List>
-          <ListItem button onClick={e => handleClick(e)}>
+          <ListItem button onClick={e => toHome(e)}>
+            <ListItemIcon><HomeIcon /></ListItemIcon>
+            <ListItemText primary="Principal" />
+          </ListItem>
+          <ListItem button onClick={e => toReceipt(e)}>
+            <ListItemIcon><ReceiptIcon /></ListItemIcon>
+            <ListItemText primary="Recibos" />
+          </ListItem>
+          <ListItem button onClick={e => toWallet(e)}>
+            <ListItemIcon><AccountBalanceWalletIcon /></ListItemIcon>
+            <ListItemText primary="Cartera" />
+          </ListItem>
+          <ListItem button onClick={e => toCurrency(e)}>
+            <ListItemIcon><MonetizationOnIcon /></ListItemIcon>
+            <ListItemText primary="Mis Monedas" />
+          </ListItem>
+          <ListItem button onClick={e => logout(e)}>
             <ListItemIcon><ExitToAppIcon /></ListItemIcon>
             <ListItemText primary="Cerrar Sesión" />
           </ListItem>

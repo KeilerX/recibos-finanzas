@@ -4,6 +4,10 @@ import NavBar from './layout/navbar/NavBar'
 import Login from './components/authentication/Login'
 import Register from './components/authentication/Register'
 import Home from './components/home/Home'
+import CreateCurrency from './components/currency/CreateCurrency'
+import Currency from './components/currency/Currency'
+import CheckCurrency from './components/currency/CheckCurrency'
+import Receipt from './components/receipt/Receipt'
 
 function App() {
   return (
@@ -15,6 +19,10 @@ function App() {
             <Route exact path="/"><Home /></Route>
             <Route path="/login"><Login /></Route>
             <Route path="/register"><Register /></Route>
+            <Route path="/currency"><Currency /></Route>
+            <Route path="/check-currency"><CheckCurrency /></Route>
+            <Route path="/create-currency"><CreateCurrency /></Route>
+            <Route path="/receipt"><Receipt /></Route>
           </Switch>
         </header>
       </div>
