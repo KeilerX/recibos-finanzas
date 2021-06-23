@@ -5,7 +5,7 @@ import { Redirect } from 'react-router-dom';
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 
-import SignedInForm from '../../shared/SignedInForm'
+import Form from '../../shared/SignedInForm'
 
 const InfoReceiptSchema = yup.object({
   emission_date: yup.date('Ingrese una fecha válida').required('La fecha de emisión es requerida'),
@@ -57,7 +57,7 @@ const InfoReceipt = () => {
 
   return (
     <div>
-        <SignedInForm
+        <Form
             initialValues={initialValues}
             validationSchema={InfoReceiptSchema}
             cardTitle={'Datos del Recibo por Honorarios'}

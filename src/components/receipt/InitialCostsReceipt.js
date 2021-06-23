@@ -5,15 +5,16 @@ import { Redirect } from 'react-router-dom';
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 
-import SignedInForm from '../../shared/SignedInForm'
+import Form from '../../shared/SignedInForm'
+import * as Constants from '../../static/constants'
 
-const CostsReceiptSchema = yup.object({
+const InitialCostsReceiptSchema = yup.object({
   reason: yup.string().ensure(),
   cost_type: yup.string().ensure(),
   cost: yup.number('Debe ingresar un número').moreThan(0, 'El número debe ser mayor a cero'),
 });
 
-const CostsReceipt = () => {
+const InitialCostsReceipt = () => {
   const { auth } = useSelector((state) => state.firebase);
 
   const initialValues= {
@@ -32,18 +33,24 @@ const CostsReceipt = () => {
           { value: 'Gastos', label: 'Gastos' },
         ],
         endAdornment: true,
+        modalTitle: Constants.INITIAL_COSTS.reason.title,
+        modalMessage: Constants.INITIAL_COSTS.reason.message,
       },
       {
         slabel: 'Formato',
         sname: 'cost_type',
-        type: 'select-input',
+        type: 'costs',
         selectOptions: [
           { value: 'moneda', label: 'Efectivo' },
           { value: 'porcentaje', label: 'Porcentaje' },
         ],
         label: 'Costo',
         name: 'cost',
+        itype: 'number',
         endAdornment: true,
+        btnText: 'Añadir',
+        modalTitle: Constants.INITIAL_COSTS.cost.title,
+        modalMessage: Constants.INITIAL_COSTS.cost.message,
       }
   ]
 
@@ -53,16 +60,16 @@ const CostsReceipt = () => {
 
   return (
     <div>
-        <SignedInForm
+        <Form
             initialValues={initialValues}
-            validationSchema={CostsReceiptSchema}
-            cardTitle={'Costos/Gastos del Recibo por Honorarios'}
+            validationSchema={InitialCostsReceiptSchema}
+            cardTitle={'Costos/Gastos Iniciales del Recibo por Honorarios'}
             fields={fields}
             btnText={'Continuar'}
-            actionToDispatch={'setCostsReceipt'}
+            actionToDispatch={'setInitialCostsReceipt'}
         />
     </div>
   )
 }
 
-export default CostsReceipt
+export default InitialCostsReceipt

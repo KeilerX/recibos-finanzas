@@ -1,30 +1,44 @@
-import React from 'react'
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import HelpIcon from '@material-ui/icons/Help';
-import Grid from '@material-ui/core/Grid';
-import MenuItem from '@material-ui/core/MenuItem';
-import DeleteIcon from '@material-ui/icons/Delete';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemText from '@material-ui/core/ListItemText';
-import IconButton from '@material-ui/core/IconButton';
+import React, { useState } from 'react'
+import { makeStyles } from '@material-ui/core/styles'
+import Card from '@material-ui/core/Card'
+import CardContent from '@material-ui/core/CardContent'
+import CardHeader from '@material-ui/core/CardHeader'
+import Button from '@material-ui/core/Button'
+import TextField from '@material-ui/core/TextField'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import HelpIcon from '@material-ui/icons/Help'
+import Grid from '@material-ui/core/Grid'
+import MenuItem from '@material-ui/core/MenuItem'
+import DeleteIcon from '@material-ui/icons/Delete'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemAvatar from '@material-ui/core/ListItemAvatar'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
+import ListItemText from '@material-ui/core/ListItemText'
+import IconButton from '@material-ui/core/IconButton'
 
-import { useFormik } from 'formik';
+import { useFormik } from 'formik'
 
-import { Redirect } from 'react-router-dom';
-import { useHistory } from "react-router-dom";
-import { useDispatch, useSelector } from 'react-redux';
-import LoadingScreen from '../layout/loading_screen/LoadingScreen';
-import { setReceiptStatus, setInfoReceipt, setCostsReceipts } from '../store/reducers/receiptReducer';
+import { Redirect } from 'react-router-dom'
+import { useHistory } from "react-router-dom"
+import { useDispatch, useSelector } from 'react-redux'
+import LoadingScreen from '../layout/loading_screen/LoadingScreen'
+import { 
+  setReceiptStatus, 
+  setInfoReceipt, 
+  setInitialCostsReceipts, 
+  removeInitialCostsReceipt, 
+  setMessageInitialCostsReceipt,
+  setFinalCostsReceipts,
+  setMessageFinalCostsReceipt,
+  removeFinalCostsReceipt,
+} from '../store/reducers/receiptReducer'
+import { 
+  setModalInfo, 
+} from '../store/reducers/modalReducer'
+import Modal from '../shared/Modal'
+import * as Constants from '../static/constants'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,12 +49,13 @@ const useStyles = makeStyles((theme) => ({
     opacity: 0.85,
   },
   textField: {
-    marginRight: '10px',
-    marginTop: '10px',
-    marginBottom: '10px',
+    marginRight: 10,
+    marginTop: 10,
+    marginBottom: 10,
+    textAlign: 'center',
   },
   titleCard: {
-    marginTop: '10px',
+    marginTop: 10,
     textAlign: 'center'
   },
   helpIcon: {
@@ -60,19 +75,41 @@ const useStyles = makeStyles((theme) => ({
   },
   label: {
     textAlign: 'left',
+  },
+  listItem: {
+    textAlign: 'center',
+  },
+  message: {
+    color: 'red',
+    textAlign: 'center',
+    marginTop: 20,
+    marginBottom: 20,
+    fontSize: 20,
   }
 }));
 
-const SignedInForm = (props) => {
-  const classes = useStyles();
+const Form = (props) => {
+  const classes = useStyles()
 
-  const history = useHistory();
-  const dispatch = useDispatch();
+  const history = useHistory()
+  const dispatch = useDispatch()
 
-  const { auth } = useSelector((state) => state.firebase);
-  const { profile } = useSelector((state) => state.firebase);
+  const { auth } = useSelector((state) => state.firebase)
+  const { profile } = useSelector((state) => state.firebase)
 
-  const { costsReceipt } = useSelector((state) => state.receipts);
+  const { initialCostsReceipt,
+          messageInitialCostsReceipt,
+          finalCostsReceipt,
+          messageFinalCostsReceipt,
+          receiptStatus } = useSelector((state) => state.receipts)
+  const { info } = useSelector((state) => state.modals)
+
+  if(messageInitialCostsReceipt !== null || messageFinalCostsReceipt !== null) {
+    setTimeout(() => {
+      dispatch(setMessageInitialCostsReceipt(null))
+      dispatch(setMessageFinalCostsReceipt(null))
+    }, 3000)
+  }
 
   const formik = useFormik({
     initialValues: props.initialValues,
@@ -83,11 +120,19 @@ const SignedInForm = (props) => {
       switch(props.actionToDispatch) {
         case 'setInfoReceipt': {
           dispatch(setInfoReceipt(values))
-          dispatch(setReceiptStatus('costs'))
+          dispatch(setReceiptStatus('initial_costs'))
           break
         }
-        case 'setCostsReceipt': {
-          dispatch(setCostsReceipts(values))
+        case 'setInitialCostsReceipt': {
+          dispatch(setReceiptStatus('final_costs'))
+          break
+        }
+        case 'setFinalCostsReceipt': {
+          dispatch(setReceiptStatus('rate_term'))
+          break
+        }
+        case 'setNominalRateTermReceipt': {
+          console.log(values)
           break
         }
         default:
@@ -99,8 +144,54 @@ const SignedInForm = (props) => {
     }
   });
 
-  const handleCostReasonChange = (event) => {
-    formik.setFieldValue('reason', event.target.value);
+  const [open, setOpen] = useState(false) //needed to open modal
+
+  const handleClickOpen = (t, m) => { //needed to open modal
+    dispatch(setModalInfo({title: t, message: m}))
+    setOpen(true)
+  };
+
+  const handleClose = () => { //needed to open modal
+    dispatch(setModalInfo({title: null, message: null}))
+    setOpen(false)
+  };
+
+  const addItem = () => {
+    switch(props.actionToDispatch) {
+      case 'setInitialCostsReceipt': {
+        if(formik.values.cost && formik.values.reason && formik.values.cost_type) {
+          dispatch(setInitialCostsReceipts(formik.values))
+        } else {
+          dispatch(setMessageInitialCostsReceipt('Por favor, complete los valores de manera correcta.'))
+        }
+        break
+      }
+      case 'setFinalCostsReceipt': {
+        if(formik.values.cost && formik.values.reason && formik.values.cost_type) {
+          dispatch(setFinalCostsReceipts(formik.values))
+        } else {
+          dispatch(setMessageFinalCostsReceipt('Por favor, complete los valores de manera correcta.'))
+        }
+        break
+      }
+      default:
+        break
+    }
+  }
+
+  const removeItem = (c, key) => {
+    switch(props.actionToDispatch) {
+      case 'setInitialCostsReceipt': {
+        dispatch(removeInitialCostsReceipt({c, key}))
+        break
+      }
+      case 'setFinalCostsReceipt': {
+        dispatch(removeFinalCostsReceipt({c, key}))
+        break
+      }
+      default:
+        break
+    }
   }
 
   if (!auth.uid) {
@@ -114,38 +205,50 @@ const SignedInForm = (props) => {
         <Card className={classes.root} variant="outlined">
             <CardHeader title={props.cardTitle} className={classes.titleCard}></CardHeader>
             <CardContent>
+            <Grid item xs={12}>
+              { info &&
+              <Modal
+                modalTitle={info.title}
+                modalMessage={info.message}
+                open={open}
+                actionButtonText={"Ok"}
+                handleClickOpen={handleClickOpen}
+                handleClose={handleClose}
+              />
+              }
+            </Grid>
             <form onSubmit={formik.handleSubmit}>
               <Grid container spacing={0}>
                 {props.fields.map(f => {
                   return (
-                    f.type === 'select' ?
-                    <TextField
-                    key={f.name}
-                    label={f.label}
-                    fullWidth
-                    autoComplete="off"
-                    className={classes.textField}
-                    name={f.name}
-                    select
-                    onChange={formik.handleChange}
-                    /* onChange={e => formik.setFieldValue(f.name, e.target.value)} */
-                    value={formik.values[f.name]}
-                    InputProps={{
-                      endAdornment: f.endAdornment ? (
-                        <InputAdornment position="end" className={classes.helpIconSelect}>
-                          <HelpIcon />
-                        </InputAdornment>
-                      ) : null }}>
-                    {f.selectOptions.map((o) => {
-                      return (
-                        <MenuItem key={o.value} value={o.value}>{o.label}</MenuItem>
-                      )
-                    })}
-                    </TextField> :
-                    f.type === 'select-input' ?
-                    <Grid item xs={12}>
+                    f.type === 'select' ? //select
+                    <Grid item xs={12} key={f.name}>
                       <TextField
-                      key={f.sname}
+                      label={f.label}
+                      fullWidth
+                      autoComplete="off"
+                      className={classes.textField}
+                      name={f.name}
+                      select
+                      onChange={formik.handleChange}
+                      /* onChange={e => formik.setFieldValue(f.name, e.target.value)} */
+                      value={formik.values[f.name]}
+                      InputProps={{
+                        endAdornment: f.endAdornment ? (
+                          <InputAdornment position="end" className={classes.helpIconSelect}>
+                            <HelpIcon onClick={() => handleClickOpen(f.modalTitle, f.modalMessage)}/>
+                          </InputAdornment>
+                        ) : null }}>
+                      {f.selectOptions.map((o) => {
+                        return (
+                          <MenuItem key={o.value} value={o.value}>{o.label}</MenuItem>
+                        )
+                      })}
+                      </TextField>
+                    </Grid> :
+                    f.type === 'costs' ? //costs
+                    <Grid item xs={12} key={f.sname}>
+                      <TextField
                       label={f.slabel}
                       fullWidth
                       autoComplete="off"
@@ -155,66 +258,126 @@ const SignedInForm = (props) => {
                       onChange={formik.handleChange}
                       /* onChange={e => formik.setFieldValue(f.name, e.target.value)} */
                       value={formik.values[f.sname]}>
-                      {f.selectOptions.map((o) => {
+                      {f.selectOptions.map((o, key) => {
                         return (
-                          <MenuItem key={o.value} value={o.value}>{o.label}</MenuItem>
+                          <MenuItem key={key} value={o.value}>{o.label}</MenuItem>
                         )
                       })}
                       </TextField>
                       <TextField
-                      key={f.name}
                       label={f.label}
                       fullWidth
                       autoComplete="off"
                       className={classes.textField}
                       name={f.name}
-                      type={f.type}
+                      type={f.itype}
                       onChange={formik.handleChange}
                       value={formik.values[f.name]}
                       error={formik.touched[f.name] && Boolean(formik.errors[f.name])}
                       helperText={formik.touched[f.name] && formik.errors[f.name]}
-                      InputLabelProps={(f.type === 'date') ? {
+                      InputLabelProps={(f.itype === 'date') ? {
                         shrink: true
                       } : null }
                       InputProps={{
                         endAdornment: f.endAdornment ? (
                           <InputAdornment position="end" className={classes.helpIcon}>
-                            <HelpIcon />
+                            <HelpIcon onClick={() => handleClickOpen(f.modalTitle, f.modalMessage)}/>
                           </InputAdornment>
                         ) : null }}
                     />
                     {
-                      costsReceipt && (
+                      initialCostsReceipt && receiptStatus === 'initial_costs' && (
                         <List>
-                          <ListItem>
-                            {/* <ListItemAvatar>
-                              <Avatar>
-                                <FolderIcon />
-                              </Avatar>
-                            </ListItemAvatar> */}
-                            {costsReceipt.map(c => {
+                            {initialCostsReceipt.map((c,key) => {
                               return (
-                                <ListItem key={c.reason}>
+                                <ListItem key={key} className={classes.listItem}>
                                   <ListItemText
                                     primary={`${c.reason} ${c.cost_type === 'moneda' ? localStorage.getItem('currency') : '%'}${c.cost}`}
                                   />
                                   <ListItemSecondaryAction>
-                                    <IconButton edge="end">
+                                    <IconButton edge="end" onClick={() => removeItem(c, key)}>
                                       <DeleteIcon />
                                     </IconButton>
                                   </ListItemSecondaryAction>
                                 </ListItem>
                               )
                             })}
-                            
-                          </ListItem>
                         </List>
                       )
                     }
+                                        {
+                      finalCostsReceipt && receiptStatus === 'final_costs' && (
+                        <List>
+                            {finalCostsReceipt.map((c,key) => {
+                              return (
+                                <ListItem key={key} className={classes.listItem}>
+                                  <ListItemText
+                                    primary={`${c.reason} ${c.cost_type === 'moneda' ? localStorage.getItem('currency') : '%'}${c.cost}`}
+                                  />
+                                  <ListItemSecondaryAction>
+                                    <IconButton edge="end" onClick={() => removeItem(c, key)}>
+                                      <DeleteIcon />
+                                    </IconButton>
+                                  </ListItemSecondaryAction>
+                                </ListItem>
+                              )
+                            })}
+                        </List>
+                      )
+                    }
+                    <Button variant="contained" color="primary" onClick={() => addItem()} >{f.btnText}</Button>
+                    { messageInitialCostsReceipt && <div className={classes.message}>{messageInitialCostsReceipt}</div>}
+                    { messageFinalCostsReceipt && <div className={classes.message}>{messageFinalCostsReceipt}</div>}
                     </Grid>
                     :
+                    f.type === 'select-auto-input' ? //select-auto-input
+                    <Grid container spacing={2}>
+                    <Grid item xs={6} key={f.sname}>
+                      <TextField
+                      label={f.slabel}
+                      fullWidth
+                      autoComplete="off"
+                      className={classes.textField}
+                      name={f.sname}
+                      select
+                      onChange={formik.handleChange}
+                      /* onChange={e => formik.setFieldValue(f.name, e.target.value)} */
+                      value={formik.values[f.sname]}
+                      error={formik.touched[f.sname] && Boolean(formik.errors[f.sname])}
+                      helperText={formik.touched[f.sname] && formik.errors[f.sname]}>
+                      {f.selectOptions.map((o, key) => {
+                        return (
+                          <MenuItem key={key} value={o.value}>{o.label}</MenuItem>
+                        )
+                      })}
+                      </TextField>
+                    </Grid>
+                    <Grid item xs={6} key={f.name}>
+                      <TextField
+                      label={f.label}
+                      fullWidth
+                      autoComplete="off"
+                      className={classes.textField}
+                      name={f.name}
+                      type={f.itype}
+                      /* onChange={formik.handleChange} */
+                      onChange={e => formik.setFieldValue(f.sname, e.target.value)}
+                      /* value={formik.values[f.name]} */
+                      value={formik.values[f.sname]}
+                      error={formik.touched[f.name] && Boolean(formik.errors[f.name])}
+                      helperText={formik.touched[f.name] && formik.errors[f.name]}
+                      inputProps={{ style: {textAlign: 'center'} }}
+                      InputProps={{
+                        endAdornment: f.endAdornment ? (
+                          <InputAdornment position="end" className={classes.helpIcon}>
+                            <HelpIcon onClick={() => handleClickOpen(f.modalTitle, f.modalMessage)}/>
+                          </InputAdornment>
+                        ) : null }}
+                      />
+                    </Grid>
+                    </Grid> :
+                    <Grid item xs={12} key={f.name}>
                     <TextField
-                    key={f.name}
                     label={f.label}
                     fullWidth
                     autoComplete="off"
@@ -225,18 +388,21 @@ const SignedInForm = (props) => {
                     value={formik.values[f.name]}
                     error={formik.touched[f.name] && Boolean(formik.errors[f.name])}
                     helperText={formik.touched[f.name] && formik.errors[f.name]}
+                    inputProps={{ style: {textAlign: 'center'} }}
                     InputLabelProps={(f.type === 'date') ? {
                       shrink: true
                     } : null }
                     InputProps={{
                       endAdornment: f.endAdornment ? (
                         <InputAdornment position="end" className={classes.helpIcon}>
-                          <HelpIcon />
+                          <HelpIcon onClick={() => handleClickOpen(f.modalTitle, f.modalMessage)}/>
                         </InputAdornment>
                       ) : null }}
                     />
+                    </Grid>
                     ) /* end return */
-                    })} {/* /* end map fields */}
+                  })
+                  } {/* /* end map fields */}
                 <Button type="submit" variant="contained" color="primary">{props.btnText}</Button>
               </Grid>
             </form>
@@ -248,4 +414,4 @@ const SignedInForm = (props) => {
   )
 }
 
-export default SignedInForm
+export default Form

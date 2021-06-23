@@ -23,79 +23,61 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const CheckCurrency = () => {
+const CheckRateType = () => {
   const classes = useStyles();
   const history = useHistory();
   const dispatch = useDispatch();
   const { auth } = useSelector((state) => state.firebase);
   const [ currency, setCurrency ] = useState(null);
-  useFirestoreConnect(props => [{
-    collection: 'currencies',
-    where: ['uid', '==', auth.uid]
-  }]);
+
   const { profile } = useSelector((state) => state.firebase);
-  const { currencies } = useSelector((state) => state.firestore.data);
 
   if (!auth.uid) {
     return <Redirect to="/login" />;
   }
 
-  const myCurrencies = [];
-  for (const c in currencies) {
-    myCurrencies.push({
-      symbol: currencies[c].symbol,
-      name: currencies[c].name
-    });
-  }
+  const rateType = [
+    { value: 'Tasa Efectiva', label: 'Tasa Efectiva' },
+    { value: 'Tasa Nominal', label: 'Tasa Nominal' },
+  ];
 
-  const selectCurrency = e => {
+  const selectRateType = e => {
     setCurrency(e.target.value);
-    localStorage.setItem("currency", e.target.value);
+    localStorage.setItem("rate_type", e.target.value);
   }
 
   const to = e => {
-    dispatch(setReceiptStatus('rate_type'));
+    dispatch(setReceiptStatus('info'));
     history.push(localStorage.getItem("to"));
   }
 
   return (
     <div>
       { !profile.isEmpty ?
-        <div>
-          {currencies ? 
             <div>
-                <h3>Selecciona la moneda con la que se trabajará</h3>
+                <h3>Selecciona el tipo de tasa con el que se trabajará</h3>
                 <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 className={classes.select}
-                value={currency || localStorage.getItem("currency")}
-                onChange={(e) => selectCurrency(e)}
+                value={localStorage.getItem("rate_type")}
+                onChange={(e) => selectRateType(e)}
                 >
-                {myCurrencies.map(c => {
+                {rateType.map(c => {
                 return (
-                    <MenuItem key={c.symbol} value={c.symbol}>{c.name}</MenuItem>
+                    <MenuItem key={c.value} value={c.value}>{c.label}</MenuItem>
                 )
                 })}
                 </Select>
-                {(currency !== null || localStorage.getItem("currency") !== null) ? 
+                {(localStorage.getItem("rate_type") !== null) ? 
                 <Button variant="contained" color="secondary" onClick={e => to(e)} className={classes.button}>
                     Continuar
                 </Button> : null
                 }
-            </div> :
-            <div>
-                <h2>Aviso</h2>
-                <p>No cuenta con ninguna moneda registrada</p>
-                <p>Para poder continuar debe registrar una moneda.</p>
-                <Button variant="contained" color="secondary" onClick={e => history.push('/create-currency')}>
-                    Agregar Moneda
-                </Button>
-            </div>}
-        </div>
+            </div>
         : <LoadingScreen />}
     </div >
   )
 }
 
-export default CheckCurrency
+export default CheckRateType

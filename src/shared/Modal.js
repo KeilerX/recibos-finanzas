@@ -22,14 +22,18 @@ const Modal = (props) => {
         }
       <Dialog
         fullScreen={fullScreen}
+        disableBackdropClick="false"
+        disableEscapeKeyDown={true}
         open={props.open}
         onClose={props.handleClose}
         aria-labelledby="responsive-dialog-title"
       >
-        <DialogTitle id="responsive-dialog-title">{props.modalTitle}</DialogTitle>
+        <DialogTitle id="responsive-dialog-title">
+          <span dangerouslySetInnerHTML={{ __html: props.modalTitle }} />
+        </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            {props.modalMessage}
+          <span dangerouslySetInnerHTML={{ __html: props.modalMessage }} />
           </DialogContentText>
         </DialogContent>
         <DialogActions>

@@ -50,10 +50,9 @@ const Currency = () => {
             Abrir modal
           </Button>
           <Modal
-            buttonText={"Hola"}
-            modalTitle={"Hola"} 
-            modalMessage={"Hola"} 
-            actionButtonText={"Hola 2"}
+            modalTitle={"Costos/Gastos de Recibos por Honorarios"} 
+            modalMessage={"Los costos y gastos son bla bla bla bla"} 
+            actionButtonText={"Ok"}
             open={open}
             handleClickOpen={handleClickOpen}
             handleClose={handleClose}
