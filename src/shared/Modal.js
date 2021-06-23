@@ -11,6 +11,7 @@ import { useTheme } from '@material-ui/core/styles';
 const Modal = (props) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const disabled = false;
 
   return (
     <div>

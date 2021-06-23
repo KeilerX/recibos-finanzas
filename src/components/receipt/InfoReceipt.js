@@ -10,7 +10,7 @@ import Form from '../../shared/SignedInForm'
 const InfoReceiptSchema = yup.object({
   emission_date: yup.date('Ingrese una fecha válida').required('La fecha de emisión es requerida'),
   payment_date: yup.date('Ingrese una fecha válida').required('La fecha de pago es requerida'),
-  tr: yup.number('Debe ingresar un número').required('El monto recibido es requerido').moreThan(0, 'El valor mínimo debe ser mayor a cero'),
+  nominal_value: yup.number('Debe ingresar un número').required('El monto recibido es requerido').moreThan(0, 'El valor mínimo debe ser mayor a cero'),
   retention: yup.number('Debe ingresar un número').required('La retención es requerida').moreThan(0, 'El valor mínimo debe ser mayor a cero'),
 });
 
@@ -20,7 +20,7 @@ const InfoReceipt = () => {
   const initialValues= {
     emission_date: '',
     payment_date: '',
-    tr: '',
+    nominal_value: '',
     retention: '',
   };
 
@@ -39,7 +39,7 @@ const InfoReceipt = () => {
       },
       {
         label: 'Total a Recibir',
-        name: 'tr',
+        name: 'nominal_value',
         type: 'number',
         endAdornment: true,
       },

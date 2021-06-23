@@ -13,12 +13,10 @@ const NominalRateTermReceiptSchema = yup.object({
   rate_term: yup.string().ensure().required('El plazo de la tasa es requerido'),
   rate_days: yup.number('Debe ingresar un número').moreThan(0, 'Los días de la tasa es requerido')/* .required('Los días del plazo de la tasa son requeridos') */,
   rate_value: yup.number('Debe ingresar un número').moreThan(0, 'El número debe ser mayor a cero').required('El valor de la tasa nominal es requerido'),
-  capitalization_term: yup.string().ensure().required('El período de capitalización es requerido'),
-  capitalization_days: yup.number('Debe ingresar un número').moreThan(0, 'El número debe ser mayor a cero')/* .required('Los días del período de capitalización son requeridos') */,
   discount_date: yup.date('Ingrese una fecha válida').required('La fecha de descuento es requerida'),
 });
 
-const NominalRateTermReceipt = () => {
+const EffectiveRateTermReceipt = () => {
   const { auth } = useSelector((state) => state.firebase);
 
   const initialValues= {
@@ -26,8 +24,6 @@ const NominalRateTermReceipt = () => {
     rate_term: '',
     rate_days: '',
     rate_value: '',
-    capitalization_term: '',
-    capitalization_days: '',
     discount_date: '',
   };
 
@@ -67,34 +63,12 @@ const NominalRateTermReceipt = () => {
         modalMessage: Constants.NOMINAL_RATE_TERM.rate_term.message,
       },
       {
-        label: 'Tasa Nominal',
+        label: 'Tasa Efectiva',
         name: 'rate_value',
         type: 'number',
         endAdornment: true,
         modalTitle: Constants.NOMINAL_RATE_TERM.rate_value.title,
         modalMessage: Constants.NOMINAL_RATE_TERM.rate_value.message,
-      },
-      {
-        slabel: 'Período de Capitalización',
-        sname: 'capitalization_term',
-        type: 'select-auto-input',
-        selectOptions: [
-          { value: 1, label: 'Diario' },
-          { value: 15, label: 'Quincenal' },
-          { value: 30, label: 'Mensual' },
-          { value: 60, label: 'Bimestral' },
-          { value: 90, label: 'Trimestral' },
-          { value: 120, label: 'Cuatrimestral' },
-          { value: 180, label: 'Semestral' },
-          { value: 360, label: 'Anual' },
-          { value: 0, label: 'Especial' },
-        ],
-        label: 'Días del Período',
-        name: 'capitalization_days',
-        itype: 'number',
-        endAdornment: true,
-        modalTitle: Constants.NOMINAL_RATE_TERM.capitalization_term.title,
-        modalMessage: Constants.NOMINAL_RATE_TERM.capitalization_term.message,
       },
       {
         label: 'Fecha de Descuento',
@@ -115,7 +89,7 @@ const NominalRateTermReceipt = () => {
         <Form
             initialValues={initialValues}
             validationSchema={NominalRateTermReceiptSchema}
-            cardTitle={'Tasa y Plazo Nominal'}
+            cardTitle={'Tasa y Plazo Efectiva'}
             fields={fields}
             btnText={'Continuar'}
             actionToDispatch={'setNominalRateTermReceipt'}
@@ -124,4 +98,4 @@ const NominalRateTermReceipt = () => {
   )
 }
 
-export default NominalRateTermReceipt
+export default EffectiveRateTermReceipt

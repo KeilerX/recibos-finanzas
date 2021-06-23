@@ -7,7 +7,7 @@ export const INFO = {
         title: ``,
         message: ``,
     },
-    tr: {
+    nominal_value: {
         title: ``,
         message: ``,
     },

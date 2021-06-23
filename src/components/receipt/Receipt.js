@@ -9,7 +9,9 @@ import InfoReceipt from './InfoReceipt'
 import InitialCostsReceipt from './InitialCostsReceipt'
 import FinalCostsReceipt from './FinalCostsReceipt'
 import NominalRateTermReceipt from './NominalRateTermReceipt'
+import EffectiveRateTermReceipt from './EffectiveRateTermReceipt'
 import CheckRateType  from './CheckRateType'
+import ResultsReceipt from './ResultsReceipt'
 
 const useStyles = makeStyles({
   root: {
@@ -27,15 +29,17 @@ const useStyles = makeStyles({
 });
 
 const Receipt = () => {
-  const classes = useStyles();
+  const classes = useStyles()
 
-  const history = useHistory();
-  const dispatch = useDispatch();
-  const { profile } = useSelector((state) => state.firebase);
+  const history = useHistory()
+  const dispatch = useDispatch()
+  const { profile } = useSelector((state) => state.firebase)
 
-  const { auth } = useSelector((state) => state.firebase);
+  const { auth } = useSelector((state) => state.firebase)
 
-  const { receiptStatus } = useSelector((state) => state.receipts);
+  const { receiptStatus } = useSelector((state) => state.receipts)
+
+  const rateType = localStorage.getItem('rate_type')
 
   if (!auth.uid) {
     return <Redirect to="/login" />;
@@ -45,14 +49,16 @@ const Receipt = () => {
     <div>
       { !profile.isEmpty ?
       <div>
-        {/* {receiptStatus && 
+        {receiptStatus && 
         receiptStatus === 'rate_type' ? <CheckRateType />:
         receiptStatus === 'info' ? <InfoReceipt /> :
         receiptStatus === 'initial_costs' ? <InitialCostsReceipt /> : 
         receiptStatus === 'final_costs' ? <FinalCostsReceipt /> : 
-        receiptStatus === 'rate_term' ? <NominalRateTermReceipt /> : null
-        } */}
-        <NominalRateTermReceipt />
+        (receiptStatus === 'rate_term' && rateType === 'Tasa Nominal') ? <NominalRateTermReceipt /> :
+        (receiptStatus === 'rate_term' && rateType === 'Tasa Efectiva') ? <EffectiveRateTermReceipt /> :
+        receiptStatus === 'results' ? <ResultsReceipt /> : null
+        }
+        {/* <NominalRateTermReceipt /> */}
       </div>
     : <LoadingScreen />}
     </div>

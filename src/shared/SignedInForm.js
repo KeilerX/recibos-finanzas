@@ -33,6 +33,7 @@ import {
   setFinalCostsReceipts,
   setMessageFinalCostsReceipt,
   removeFinalCostsReceipt,
+  setRateTermReceipt,
 } from '../store/reducers/receiptReducer'
 import { 
   setModalInfo, 
@@ -132,7 +133,8 @@ const Form = (props) => {
           break
         }
         case 'setNominalRateTermReceipt': {
-          console.log(values)
+          dispatch(setRateTermReceipt(values))
+          dispatch(setReceiptStatus('results'))
           break
         }
         default:
@@ -193,6 +195,7 @@ const Form = (props) => {
         break
     }
   }
+
 
   if (!auth.uid) {
     return <Redirect to="/login" />;
@@ -331,8 +334,8 @@ const Form = (props) => {
                     </Grid>
                     :
                     f.type === 'select-auto-input' ? //select-auto-input
-                    <Grid container spacing={2}>
-                    <Grid item xs={6} key={f.sname}>
+                    <Grid container spacing={2} key={f.sname}>
+                    <Grid item xs={6} >
                       <TextField
                       label={f.slabel}
                       fullWidth
@@ -340,8 +343,12 @@ const Form = (props) => {
                       className={classes.textField}
                       name={f.sname}
                       select
-                      onChange={formik.handleChange}
-                      /* onChange={e => formik.setFieldValue(f.name, e.target.value)} */
+                      /* onChange={formik.handleChange} */
+                      /* onChange={e => handleCustomChange(f.sname, f.name, e)} */
+                      onChange={e => {
+                        formik.setFieldValue(f.name, e.target.value)
+                        formik.setFieldValue(f.sname, e.target.value)
+                      }}
                       value={formik.values[f.sname]}
                       error={formik.touched[f.sname] && Boolean(formik.errors[f.sname])}
                       helperText={formik.touched[f.sname] && formik.errors[f.sname]}>
@@ -352,7 +359,7 @@ const Form = (props) => {
                       })}
                       </TextField>
                     </Grid>
-                    <Grid item xs={6} key={f.name}>
+                    <Grid item xs={6}>
                       <TextField
                       label={f.label}
                       fullWidth
@@ -361,7 +368,7 @@ const Form = (props) => {
                       name={f.name}
                       type={f.itype}
                       /* onChange={formik.handleChange} */
-                      onChange={e => formik.setFieldValue(f.sname, e.target.value)}
+                      /* onChange={() => formik.setFieldValue(f.name, f.sname)} */
                       /* value={formik.values[f.name]} */
                       value={formik.values[f.sname]}
                       error={formik.touched[f.name] && Boolean(formik.errors[f.name])}

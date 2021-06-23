@@ -7,14 +7,14 @@ export const receiptSlice = createSlice({
         infoReceipt: {
             emission_date: null,
             payment_date: null,
-            tr: null,
+            nominal_value: null,
             retention: null,
         },
         initialCostsReceipt: [],
         messageInitialCostsReceipt: null,
         finalCostsReceipt: [],
         messageFinalCostsReceipt: null,
-        rateTerm: []
+        rateTermReceipt: []
     },
     reducers: {
         setReceiptStatus: (state, action) => {
@@ -67,8 +67,8 @@ export const receiptSlice = createSlice({
                 ...state.finalCostsReceipt.slice(action.payload.key + 1)
             ]
         },
-        setRateTerm: (state, action) => {
-            state.rateTerm = action.payload
+        setRateTermReceipt: (state, action) => {
+            state.rateTermReceipt = action.payload
         }
     },
 });
@@ -81,7 +81,7 @@ export const { setReceiptStatus,
                setFinalCostsReceipts,
                setMessageFinalCostsReceipt,
                removeFinalCostsReceipt,
-               setRateTerm,
+               setRateTermReceipt,
             } = receiptSlice.actions
 
 export default receiptSlice.reducer
