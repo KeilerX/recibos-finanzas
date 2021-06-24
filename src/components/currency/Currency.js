@@ -5,6 +5,9 @@ import { Redirect, useHistory } from 'react-router-dom';
 import LoadingScreen from '../../layout/loading_screen/LoadingScreen';
 import Button from '@material-ui/core/Button';
 
+import * as functions from '../../utils/functions';
+
+
 const Currency = () => {
   const history = useHistory();
   const { auth } = useSelector((state) => state.firebase);
@@ -14,7 +17,7 @@ const Currency = () => {
   }]);
   const { profile } = useSelector((state) => state.firebase);
   const { currencies } = useSelector((state) => state.firestore.data);
-
+  
   if (!auth.uid) {
     return <Redirect to="/login" />;
   }
