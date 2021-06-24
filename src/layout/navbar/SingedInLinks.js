@@ -84,6 +84,7 @@ const SingedInLinks = () => {
   const dispatch = useDispatch();
 
   const cleanLocalStorage = () => {
+    setOpen(false);
     if(localStorage.getItem("to")) {
       localStorage.removeItem("to");
     }
@@ -116,6 +117,11 @@ const SingedInLinks = () => {
     cleanLocalStorage()
     localStorage.setItem("to", "/wallet");
     history.push("/check-currency");
+  }
+
+  const toMyReceipts = (e) => {
+    cleanLocalStorage()
+    history.push("/receipt-table")
   }
 
   return (
@@ -162,11 +168,15 @@ const SingedInLinks = () => {
           </ListItem>
           <ListItem button onClick={e => toReceipt(e)}>
             <ListItemIcon><ReceiptIcon /></ListItemIcon>
-            <ListItemText primary="Recibos" />
+            <ListItemText primary="Generar Recibo" />
           </ListItem>
           <ListItem button onClick={e => toWallet(e)}>
             <ListItemIcon><AccountBalanceWalletIcon /></ListItemIcon>
-            <ListItemText primary="Cartera" />
+            <ListItemText primary="Generar Cartera" />
+          </ListItem>
+          <ListItem button onClick={e => toMyReceipts(e)}>
+            <ListItemIcon><ReceiptIcon /></ListItemIcon>
+            <ListItemText primary="Mis Recibos" />
           </ListItem>
           <ListItem button onClick={e => toCurrency(e)}>
             <ListItemIcon><MonetizationOnIcon /></ListItemIcon>
