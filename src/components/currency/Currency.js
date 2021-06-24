@@ -8,6 +8,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Modal from '../../shared/Modal';
 
+import * as functions from '../../utils/functions';
+
+
 const Currency = () => {
   const [open, setOpen] = useState(false); //needed to open modal
   const history = useHistory();
@@ -18,7 +21,7 @@ const Currency = () => {
   }]);
   const { profile } = useSelector((state) => state.firebase);
   const { currencies } = useSelector((state) => state.firestore.data);
-
+  
   if (!auth.uid) {
     return <Redirect to="/login" />;
   }
@@ -38,7 +41,6 @@ const Currency = () => {
   const handleClose = () => { //needed to open modal
     setOpen(false);
   };
-
   return (
     <div>
       { !profile.isEmpty ?

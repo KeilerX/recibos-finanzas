@@ -38,10 +38,27 @@ const ResultsReceipt = () => {
 
   const { auth } = useSelector((state) => state.firebase)
   const { infoReceipt, initialCostsReceipt, finalCostsReceipt, rateTermReceipt } = useSelector((state) => state.receipts)
+  
+  const [paymentDate, setPaymentDate] = useState(infoReceipt.payment_date);
+  const [discountDate, setDiscountDate] = useState(rateTermReceipt.discount_date);
+  const [NDias, setNDias] = useState(functions.calcularDiasTranscurridos(discountDate, paymentDate));
+   
+  const [tasaNDias, setTasaNDias] = useState(functions.calcularTasaEfectivaANDias(rateTermReceipt.rate_term,NDias,rateTermReceipt.rate_value,rateTermReceipt.capitalization_term));
+  const [tasaDcto, setTasaDcto] = useState(functions.calcularTasaEfectivaDescuentoANDias(tasaNDias));
 
-  const [VN, setVN] = useState(infoReceipt.nominal_value);
+  const [nominalValue, setNominalValue] = useState(infoReceipt.nominal_value);
+  const [dct, setDct] = useState(functions.calcularDescuentoANDias(tasaDcto,nominalValue));
+  const [valorNeto, setValorNeto] = useState(functions.calcularValorNeto(nominalValue,dct));
+  
+  const [retention, setRetention] = useState(infoReceipt.retention);
 
-  const VN2 = useState(infoReceipt.emission_date);
+  const [sumInitialCosts, setSumInitialCosts]=useState(functions.calcularSumaCostos(initialCostsReceipt, nominalValue));
+  const [sumFinalCosts, setSumFinalCosts]=useState(functions.calcularSumaCostos(finalCostsReceipt, nominalValue));
+
+  const [valorRecibido, setValorRecibido] = useState(functions.calcularValorRecibido(valorNeto,sumInitialCosts,retention));
+  const [valorEntregado, setValorEntregado] = useState(functions.calcularValorEntregado(nominalValue,sumFinalCosts,retention));
+
+  const [TCEA, setTCEA] = useState(functions.calcularTCEA(valorEntregado,valorRecibido,NDias,rateTermReceipt.year_days));
 
   if (!auth.uid) {
     return <Redirect to="/" />
@@ -55,8 +72,20 @@ const ResultsReceipt = () => {
           className={classes.titleCard}
         ></CardHeader>
         <CardContent>
-            <div>{VN}</div>
-            <div>{VN2}</div>
+            <div>Fecha de pago {paymentDate}</div>
+            <div>Fecha de descuento {discountDate}</div>
+            <div># dias {NDias}</div>
+            <div>TE% {tasaNDias.toFixed(7)}</div>
+            <div>d% {tasaDcto.toFixed(7)}</div>
+            <div>Valor nominal {nominalValue}</div>
+            <div>Descuento {dct.toFixed(2)}</div>
+            <div>Valor neto {valorNeto.toFixed(2)}</div>
+            <div>Retencion {retention}</div>
+            <div>Suma costos iniciales {sumInitialCosts}</div>
+            <div>Suma costos finales {sumFinalCosts}</div>
+            <div>Valor recibido {valorRecibido.toFixed(2)}</div>
+            <div>Valor entregado {valorEntregado.toFixed(2)}</div>
+            <div>TCEA% {TCEA.toFixed(7)}</div>
         </CardContent>
       </Card>
     </div>
