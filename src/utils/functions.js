@@ -16,17 +16,27 @@ export const calcularDiasTranscurridos = (discount_date,payment_date) => { //yyy
     return diff;
 }
 
-export const calcularTasaEfectivaANDiasDeEfectiva = (dias_tasa,dias_transcurridos,rate_value) => {
-
+export const calcularTasaEfectivaANDiasDeEfectiva = (rate_term,dias_transcurridos,rate_value) => {
     rate_value /= 100;
-    return (Math.pow(1+rate_value,dias_transcurridos/dias_tasa)-1)*100;
+    return (Math.pow(1+rate_value,dias_transcurridos/rate_term)-1)*100;
 }
 
 //ToDo:
-export const calcularTasaEfectivaANDiasDeNominal = (dias_tasa,dias_capitalizacion,dias_transcurridos,valor_de_tasa) => {
-    var m = dias_tasa/dias_capitalizacion;
-    var n = dias_transcurridos/dias_capitalizacion;
-    return Math.pow(1+(valor_de_tasa/(m*100)),n)-1;
+export const calcularTasaEfectivaANDiasDeNominal = (rate_term,capitalization_term,dias_transcurridos,rate_value) => {
+    rate_value /= 100;
+    let m = rate_term/capitalization_term;
+    let n = dias_transcurridos/capitalization_term;
+    let rate = Math.pow(1+(rate_value/m),n)-1;
+    console.log("te%:",rate*100);
+    return rate*100;
+}
+
+export const calcularTasaEfectivaANDias = (rate_term,dias_transcurridos,rate_value,capitalization_term) => {
+    if (localStorage.getItem("rate_type") === "Tasa Efectiva"){
+        return calcularTasaEfectivaANDiasDeEfectiva(rate_term,dias_transcurridos,rate_value);
+    }else{
+        return calcularTasaEfectivaANDiasDeNominal(rate_term,capitalization_term,dias_transcurridos,rate_value);
+    }
 }
 
 export const calcularTasaEfectivaDescuentoANDias = (tasa_efectiva_a_n_dias) => {
@@ -43,23 +53,19 @@ export const calcularValorNeto = (nominal_value,descuento_a_n_dias) =>{
     return nominal_value-descuento_a_n_dias
 }
 
-//ToDo:
-export const calcularSumaCostosIniciales = (costos_iniciales) => {
-    var suma_costos_iniciales = 0;
-    costos_iniciales.forEach((value) => {
-        suma_costos_iniciales += value["cost"];
+export const calcularSumaCostos= (costos, nominal_value) => {
+    let suma_costos = 0;
+    costos.forEach((value) => {
+        if(value.cost_type === 'moneda'){
+            suma_costos += value.cost;
+        }else{
+            suma_costos += value.cost*nominal_value;
+        }
     });
-    return suma_costos_iniciales;
+    return suma_costos;
 }
 
-export const calcularSumaCostosFinales = (costos_finales) => {
-    var suma_costos_finales = 0;
-    costos_finales.forEach((value) => {
-        suma_costos_finales += value["cost"];
-    });
-    return suma_costos_finales;
-}
-
+//localStorage.getItem(“rate_type”)
 export const calcularValorRecibido = (valor_neto,suma_costos_iniciales,retention) =>{
     return valor_neto-suma_costos_iniciales-retention;
 }
@@ -69,5 +75,6 @@ export const calcularValorEntregado = (valor_nominal,suma_costos_finales,retenti
 }
 
 export const calcularTCEA = (valor_entregado,valor_recibido,dias_transcurridos,dias_por_anio) =>{
-    return Math.pow(valor_entregado/valor_recibido,dias_por_anio/dias_transcurridos)-1;
+    let rate = Math.pow(valor_entregado/valor_recibido,dias_por_anio/dias_transcurridos)-1;
+    return rate*100;
 }

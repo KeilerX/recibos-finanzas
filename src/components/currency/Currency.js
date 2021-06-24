@@ -22,27 +22,6 @@ const Currency = () => {
   const { profile } = useSelector((state) => state.firebase);
   const { currencies } = useSelector((state) => state.firestore.data);
   
-  /***/
-  const {infoReceipt,costsReceipt} = useSelector((state)=>state);
-
-  let discount_date = "2021-05-05", payment_date = "2021-06-06";
-  let diff = functions.calcularDiasTranscurridos(discount_date, payment_date);//dias+1
-  console.log(`#dias ${diff}`);
-  let rate_term = 30;
-  let rate_value = 17.49;
-  let tasaANDias = functions.calcularTasaEfectivaANDiasDeEfectiva(rate_term,diff,rate_value);
-  console.log(`TE% ${tasaANDias.toFixed(7)}`);
-  let tasaDcto = functions.calcularTasaEfectivaDescuentoANDias(tasaANDias);
-  console.log(`d% ${tasaDcto.toFixed(7)}`);
-  let nominal_value = 4548;
-  let dcto = functions.calcularDescuentoANDias(tasaDcto,nominal_value);
-  console.log(`Descuento ${dcto.toFixed(2)}`);
-  let vneto = functions.calcularValorNeto(nominal_value,dcto);
-  console.log(`Valor neto ${vneto.toFixed(2)}`);
-  let retencion = 550; //ToDo: cuanto y apartir de qué monto
-  /***/
-
-
   if (!auth.uid) {
     return <Redirect to="/login" />;
   }
