@@ -55,7 +55,7 @@ const CheckCurrency = () => {
 
   const to = e => {
     dispatch(setReceiptStatus('rate_type'));
-    history.push(localStorage.getItem("to"));
+    history.push("/receipt");
   }
 
   return (

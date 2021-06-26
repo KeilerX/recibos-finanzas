@@ -11,7 +11,14 @@ import TableRow from '@material-ui/core/TableRow';
 
 const useStyles = makeStyles({
     root: {
-        width: '100%',
+        width: '98%',
+        margin: 'auto',
+    },
+    subTable: {
+        width: '95%',
+        margin: 'auto',
+        marginTop: 20,
+        marginBottom: 50,
     },
     container: {
         minHeight: 440,
@@ -34,7 +41,7 @@ const TableCustom = (props) => {
     };
 
     return (
-        <Paper className={classes.root}>
+        <Paper className={props.style ? classes[props.style] : classes.root}>
             <TableContainer className={classes.container}>
                 <Table stickyHeader aria-label="sticky table">
                     <TableHead>

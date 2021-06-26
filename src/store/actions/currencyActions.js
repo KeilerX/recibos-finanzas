@@ -8,6 +8,6 @@ export const createCurrency = (newCurrency) => {
       dispatch({ type: 'CURRENCY_CREATED' });
     }).catch(err => {
       dispatch({ type: 'CURRENCY_CREATATION_ERROR', err });
-    })
+    });
   }
 }

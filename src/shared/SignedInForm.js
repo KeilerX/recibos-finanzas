@@ -35,6 +35,14 @@ import {
   removeFinalCostsReceipt,
   setRateTermReceipt,
 } from '../store/reducers/receiptReducer'
+import {
+  setInitialCostsWallet, 
+  setFinalCostsWallet,
+  setRateTermWallet,
+  setWalletResults,
+  setInfoWallet,
+  setGeneralResults
+} from '../store/reducers/walletReducer'
 import { 
   setModalInfo, 
 } from '../store/reducers/modalReducer'
@@ -48,6 +56,12 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 50,
     marginRight: 50,
     opacity: 0.85,
+  },
+  subRoot: {
+    width: '40%',
+    margin: 'auto',
+    overflowX: 'hidden',
+    marginTop: 80,
   },
   textField: {
     marginRight: 10,
@@ -86,6 +100,11 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 20,
     marginBottom: 20,
     fontSize: 20,
+  },
+  button: {
+    width: '50%',
+    margin: 'auto',
+    marginTop: 20,
   }
 }));
 
@@ -98,7 +117,8 @@ const Form = (props) => {
   const { auth } = useSelector((state) => state.firebase)
   const { profile } = useSelector((state) => state.firebase)
 
-  const { initialCostsReceipt,
+  const { infoReceipt,
+          initialCostsReceipt,
           messageInitialCostsReceipt,
           finalCostsReceipt,
           messageFinalCostsReceipt,
@@ -133,16 +153,25 @@ const Form = (props) => {
           break
         }
         case 'setNominalRateTermReceipt': {
-          dispatch(setRateTermReceipt(values))
+          const operationType = localStorage.getItem('operation_type')
+          if(operationType === 'receipt') {
+            dispatch(setRateTermReceipt(values))
+          } else {
+            dispatch(setInitialCostsWallet(initialCostsReceipt))
+            dispatch(setFinalCostsWallet(finalCostsReceipt))
+            dispatch(setRateTermWallet(values))
+            dispatch(setInfoWallet(infoReceipt))
+          }
           dispatch(setReceiptStatus('results'))
+          break
+        }
+        case 'addInfoWallet': {
+          dispatch(setInfoWallet(values))
           break
         }
         default:
           break
       }
-      //dispatch(setInfoReceipt(infoReceipt))
-      //dispatch(login(credentials));
-      //history.push('/');
     }
   });
 
@@ -205,7 +234,7 @@ const Form = (props) => {
     <div>
       { !profile.isEmpty ?
       <div>
-        <Card className={classes.root} variant="outlined">
+        <Card className={props.style ? classes[props.style] : classes.root} variant="outlined">
             <CardHeader title={props.cardTitle} className={classes.titleCard}></CardHeader>
             <CardContent>
             <Grid item xs={12}>
@@ -410,7 +439,7 @@ const Form = (props) => {
                     ) /* end return */
                   })
                   } {/* /* end map fields */}
-                <Button type="submit" variant="contained" color="primary">{props.btnText}</Button>
+                <Button type="submit" variant="contained" color="primary" className={classes.button}>{props.btnText}</Button>
               </Grid>
             </form>
             </CardContent>

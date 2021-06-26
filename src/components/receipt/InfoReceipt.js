@@ -6,6 +6,7 @@ import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 
 import Form from '../../shared/SignedInForm'
+import * as Constants from '../../static/constants'
 
 const InfoReceiptSchema = yup.object({
   emission_date: yup.date('Ingrese una fecha válida').required('La fecha de emisión es requerida'),
@@ -30,24 +31,32 @@ const InfoReceipt = () => {
         name: 'emission_date',
         type: 'date',
         endAdornment: true,
+        modalTitle: Constants.INFO.emission_date.title,
+        modalMessage: Constants.INFO.emission_date.message,
       },
       {
         label: 'Fecha de Pago',
         name: 'payment_date',
         type: 'date',
         endAdornment: true,
+        modalTitle: Constants.INFO.payment_date.title,
+        modalMessage: Constants.INFO.payment_date.message,
       },
       {
         label: 'Total a Recibir',
         name: 'nominal_value',
         type: 'number',
         endAdornment: true,
+        modalTitle: Constants.INFO.nominal_value.title,
+        modalMessage: Constants.INFO.nominal_value.message,
       },
       {
         label: 'Retención',
         name: 'retention',
         type: 'number',
         endAdornment: true,
+        modalTitle: Constants.INFO.retention.title,
+        modalMessage: Constants.INFO.retention.message,
       }
   ]
 

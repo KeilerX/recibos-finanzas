@@ -1,16 +1,7 @@
 import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
 import { useDispatch, useSelector } from 'react-redux';
-import { useFirestore, useFirestoreConnect } from 'react-redux-firebase';
-import { Redirect, useHistory } from 'react-router-dom';
+import { useFirestoreConnect } from 'react-redux-firebase';
+import { Redirect } from 'react-router-dom';
 import LoadingScreen from '../../layout/loading_screen/LoadingScreen';
 import TableCustom from '../../shared/TableCustom'
 
@@ -47,7 +38,7 @@ const TableReceipt = () => {
   const myReceipts = [];
   for(const r in receipts) {
     myReceipts.push({
-      TEA: { value: receipts[r].TEA.toString() + '%', id: 'TEA' },
+      TEA: { value: receipts[r].TEA ? receipts[r].TEA.toString() : 0 + '%', id: 'TEA' },
       ND: { value: receipts[r].ND, id: 'ND' },
       TE: { value: receipts[r].TE.toString() + '%', id: 'TE' },
       d: { value: receipts[r].d.toString() + '%', id: 'd' },

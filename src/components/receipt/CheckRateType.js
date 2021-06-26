@@ -48,7 +48,7 @@ const CheckRateType = () => {
 
   const to = e => {
     dispatch(setReceiptStatus('info'));
-    history.push(localStorage.getItem("to"));
+    history.push("/receipt");
   }
 
   return (

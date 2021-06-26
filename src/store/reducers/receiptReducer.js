@@ -14,7 +14,7 @@ export const receiptSlice = createSlice({
         messageInitialCostsReceipt: null,
         finalCostsReceipt: [],
         messageFinalCostsReceipt: null,
-        rateTermReceipt: []
+        rateTermReceipt: [],
     },
     reducers: {
         setReceiptStatus: (state, action) => {
@@ -70,19 +70,6 @@ export const receiptSlice = createSlice({
         setRateTermReceipt: (state, action) => {
             state.rateTermReceipt = action.payload
         },
-        createReceipt: (newReceipt) => {
-            return (dispatch, getState, { getFirestore }) => {
-                const firestore = getFirestore()
-                firestore.collection('receipts').add({
-                    ...newReceipt,
-                    creationDate: new Date(),
-                }).then(res => {
-                    console.log(res)
-                }).catch(err => {
-                    console.log(err)
-                })
-            }
-        }
     },
 });
 

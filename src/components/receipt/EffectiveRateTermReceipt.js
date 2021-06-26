@@ -37,8 +37,8 @@ const EffectiveRateTermReceipt = () => {
           { value: 365, label: '365 días' },
         ],
         endAdornment: true,
-        modalTitle: Constants.NOMINAL_RATE_TERM.year_type.title,
-        modalMessage: Constants.NOMINAL_RATE_TERM.year_type.message,
+        modalTitle: Constants.EFFECTIVE_RATE_TERM.year_type.title,
+        modalMessage: Constants.EFFECTIVE_RATE_TERM.year_type.message,
       },
       {
         slabel: 'Plazo de Tasa',
@@ -59,24 +59,24 @@ const EffectiveRateTermReceipt = () => {
         name: 'rate_days',
         itype: 'number',
         endAdornment: true,
-        modalTitle: Constants.NOMINAL_RATE_TERM.rate_term.title,
-        modalMessage: Constants.NOMINAL_RATE_TERM.rate_term.message,
+        modalTitle: Constants.EFFECTIVE_RATE_TERM.rate_term.title,
+        modalMessage: Constants.EFFECTIVE_RATE_TERM.rate_term.message,
       },
       {
         label: 'Tasa Efectiva',
         name: 'rate_value',
         type: 'number',
         endAdornment: true,
-        modalTitle: Constants.NOMINAL_RATE_TERM.rate_value.title,
-        modalMessage: Constants.NOMINAL_RATE_TERM.rate_value.message,
+        modalTitle: Constants.EFFECTIVE_RATE_TERM.rate_value.title,
+        modalMessage: Constants.EFFECTIVE_RATE_TERM.rate_value.message,
       },
       {
         label: 'Fecha de Descuento',
         name: 'discount_date',
         type: 'date',
         endAdornment: true,
-        modalTitle: Constants.NOMINAL_RATE_TERM.discount_date.title,
-        modalMessage: Constants.NOMINAL_RATE_TERM.discount_date.message,
+        modalTitle: Constants.EFFECTIVE_RATE_TERM.discount_date.title,
+        modalMessage: Constants.EFFECTIVE_RATE_TERM.discount_date.message,
       }
   ]
 

@@ -12,6 +12,7 @@ import NominalRateTermReceipt from './NominalRateTermReceipt'
 import EffectiveRateTermReceipt from './EffectiveRateTermReceipt'
 import CheckRateType  from './CheckRateType'
 import ResultsReceipt from './ResultsReceipt'
+import ProcessResultsWalletTable from './ProcessResultsWalletTable'
 
 const useStyles = makeStyles({
   root: {
@@ -40,6 +41,7 @@ const Receipt = () => {
   const { receiptStatus } = useSelector((state) => state.receipts)
 
   const rateType = localStorage.getItem('rate_type')
+  const operationType = localStorage.getItem('operation_type')
 
   if (!auth.uid) {
     return <Redirect to="/login" />;
@@ -52,11 +54,12 @@ const Receipt = () => {
         {receiptStatus && 
         receiptStatus === 'rate_type' ? <CheckRateType />:
         receiptStatus === 'info' ? <InfoReceipt /> :
-        receiptStatus === 'initial_costs' ? <InitialCostsReceipt /> : 
-        receiptStatus === 'final_costs' ? <FinalCostsReceipt /> : 
+        receiptStatus === 'initial_costs' ? <InitialCostsReceipt /> :
+        receiptStatus === 'final_costs' ? <FinalCostsReceipt /> :
         (receiptStatus === 'rate_term' && rateType === 'Tasa Nominal') ? <NominalRateTermReceipt /> :
         (receiptStatus === 'rate_term' && rateType === 'Tasa Efectiva') ? <EffectiveRateTermReceipt /> :
-        receiptStatus === 'results' ? <ResultsReceipt /> : null
+        (receiptStatus === 'results' && operationType === 'receipt') ? <ResultsReceipt /> :
+        (receiptStatus === 'results' && operationType === 'wallet') ? <ProcessResultsWalletTable /> : null
         }
         {/* <NominalRateTermReceipt /> */}
       </div>

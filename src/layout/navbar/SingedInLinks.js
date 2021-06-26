@@ -109,6 +109,7 @@ const SingedInLinks = () => {
   const toReceipt = (e) => {
     cleanLocalStorage();
     localStorage.setItem("to", "/receipt");
+    localStorage.setItem('operation_type', 'receipt')
     history.push("/check-currency");
 
   }
@@ -116,6 +117,7 @@ const SingedInLinks = () => {
   const toWallet = (e) =>  {
     cleanLocalStorage()
     localStorage.setItem("to", "/wallet");
+    localStorage.setItem('operation_type', 'wallet')
     history.push("/check-currency");
   }
 

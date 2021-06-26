@@ -34,8 +34,8 @@ const FinalCostsReceipt = () => {
           { value: 'Otros gastos', label: 'Otros gastos' },
         ],
         endAdornment: true,
-        modalTitle: Constants.INITIAL_COSTS.reason.title,
-        modalMessage: Constants.INITIAL_COSTS.reason.message,
+        modalTitle: Constants.FINAL_COSTS.reason.title,
+        modalMessage: Constants.FINAL_COSTS.reason.message,
       },
       {
         slabel: 'Formato',
@@ -50,8 +50,8 @@ const FinalCostsReceipt = () => {
         itype: 'number',
         endAdornment: true,
         btnText: 'Añadir',
-        modalTitle: Constants.INITIAL_COSTS.cost.title,
-        modalMessage: Constants.INITIAL_COSTS.cost.message,
+        modalTitle: Constants.FINAL_COSTS.cost.title,
+        modalMessage: Constants.FINAL_COSTS.cost.message,
       }
   ]
 

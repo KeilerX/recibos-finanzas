@@ -3,21 +3,23 @@ import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-
-import { useFormik } from 'formik';
-import * as yup from 'yup';
 
 import { Link, Redirect } from 'react-router-dom';
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../../store/actions/authActions';
 import * as functions from '../../utils/functions'
+import { createReceipt } from '../../store/actions/dbSaveActions'
+import Modal from '../../shared/Modal'
 
 const useStyles = makeStyles({
   root: {
-    minWidth: 250,
+    maxWidth: 800,
   },
   textField: {
     marginRight: '10px',
@@ -25,8 +27,15 @@ const useStyles = makeStyles({
     marginBottom: '10px'
   },
   titleCard: {
+    color: '#3f51b5',
     marginTop: '10px',
     textAlign: 'center'
+  },
+  labelText: {
+    fontSize: 18,
+  },
+  resultText: {
+    fontSize: 15,
   }
 });
 
@@ -39,26 +48,60 @@ const ResultsReceipt = () => {
   const { auth } = useSelector((state) => state.firebase)
   const { infoReceipt, initialCostsReceipt, finalCostsReceipt, rateTermReceipt } = useSelector((state) => state.receipts)
   
-  const [paymentDate, setPaymentDate] = useState(infoReceipt.payment_date);
-  const [discountDate, setDiscountDate] = useState(rateTermReceipt.discount_date);
-  const [NDias, setNDias] = useState(functions.calcularDiasTranscurridos(discountDate, paymentDate));
+  const [paymentDate, setPaymentDate] = useState(infoReceipt.payment_date)
+  const [discountDate, setDiscountDate] = useState(rateTermReceipt.discount_date)
+  const [NDias, setNDias] = useState(functions.calcularDiasTranscurridos(discountDate, paymentDate))
    
-  const [tasaNDias, setTasaNDias] = useState(functions.calcularTasaEfectivaANDias(rateTermReceipt.rate_term,NDias,rateTermReceipt.rate_value,rateTermReceipt.capitalization_term));
-  const [tasaDcto, setTasaDcto] = useState(functions.calcularTasaEfectivaDescuentoANDias(tasaNDias));
+  const [tasaNDias, setTasaNDias] = useState(functions.calcularTasaEfectivaANDias(rateTermReceipt.rate_term,NDias,rateTermReceipt.rate_value,rateTermReceipt.capitalization_term))
+  const [tasaDcto, setTasaDcto] = useState(functions.calcularTasaEfectivaDescuentoANDias(tasaNDias))
 
-  const [nominalValue, setNominalValue] = useState(infoReceipt.nominal_value);
-  const [dct, setDct] = useState(functions.calcularDescuentoANDias(tasaDcto,nominalValue));
-  const [valorNeto, setValorNeto] = useState(functions.calcularValorNeto(nominalValue,dct));
+  const [nominalValue, setNominalValue] = useState(infoReceipt.nominal_value)
+  const [dct, setDct] = useState(functions.calcularDescuentoANDias(tasaDcto,nominalValue))
+  const [valorNeto, setValorNeto] = useState(functions.calcularValorNeto(nominalValue,dct))
   
-  const [retention, setRetention] = useState(infoReceipt.retention);
+  const [retention, setRetention] = useState(infoReceipt.retention)
 
-  const [sumInitialCosts, setSumInitialCosts]=useState(functions.calcularSumaCostos(initialCostsReceipt, nominalValue));
-  const [sumFinalCosts, setSumFinalCosts]=useState(functions.calcularSumaCostos(finalCostsReceipt, nominalValue));
+  const [sumInitialCosts, setSumInitialCosts]=useState(functions.calcularSumaCostos(initialCostsReceipt, nominalValue))
+  const [sumFinalCosts, setSumFinalCosts]=useState(functions.calcularSumaCostos(finalCostsReceipt, nominalValue))
 
-  const [valorRecibido, setValorRecibido] = useState(functions.calcularValorRecibido(valorNeto,sumInitialCosts,retention));
-  const [valorEntregado, setValorEntregado] = useState(functions.calcularValorEntregado(nominalValue,sumFinalCosts,retention));
+  const [valorRecibido, setValorRecibido] = useState(functions.calcularValorRecibido(valorNeto,sumInitialCosts,retention))
+  const [valorEntregado, setValorEntregado] = useState(functions.calcularValorEntregado(nominalValue,sumFinalCosts,retention))
 
-  const [TCEA, setTCEA] = useState(functions.calcularTCEA(valorEntregado,valorRecibido,NDias,rateTermReceipt.year_days));
+  const [TCEA, setTCEA] = useState(functions.calcularTCEA(valorEntregado,valorRecibido,NDias,rateTermReceipt.year_days))
+
+  const currency = localStorage.getItem('currency')
+
+  const saveReceipt = () => {
+  const  newReceipt = {
+      //TEA: TEA,
+      ND: NDias,
+      TE: parseFloat(tasaNDias.toFixed(7)),
+      d: parseFloat(tasaDcto.toFixed(7)),
+      D: parseFloat(dct.toFixed(2)),
+      Rt: parseFloat(retention.toFixed(2)),
+      CI: parseFloat(sumInitialCosts.toFixed(2)),
+      VNet: parseFloat(valorNeto.toFixed(2)),
+      VR: parseFloat(valorRecibido.toFixed(2)),
+      CF: parseFloat(sumFinalCosts.toFixed(2)),
+      VE: parseFloat(valorEntregado.toFixed(2)),
+      TCEA: parseFloat(TCEA.toFixed(7)),
+      currency: currency,
+      uid: auth.uid,
+    }
+    localStorage.setItem('dataToSave', JSON.stringify(newReceipt))
+    setOpen(true)
+    console.log(newReceipt)
+  }
+
+  const [open, setOpen] = useState(false) //needed to open modal
+
+  const handleClickOpen = () => { //needed to open modal
+    setOpen(true)
+  };
+
+  const handleClose = () => { //needed to open modal
+    setOpen(false)
+  };
 
   if (!auth.uid) {
     return <Redirect to="/" />
@@ -72,20 +115,126 @@ const ResultsReceipt = () => {
           className={classes.titleCard}
         ></CardHeader>
         <CardContent>
-            <div>Fecha de pago {paymentDate}</div>
-            <div>Fecha de descuento {discountDate}</div>
-            <div># dias {NDias}</div>
-            <div>TE% {tasaNDias.toFixed(7)}</div>
-            <div>d% {tasaDcto.toFixed(7)}</div>
-            <div>Valor nominal {nominalValue}</div>
-            <div>Descuento {dct.toFixed(2)}</div>
-            <div>Valor neto {valorNeto.toFixed(2)}</div>
-            <div>Retencion {retention}</div>
-            <div>Suma costos iniciales {sumInitialCosts}</div>
-            <div>Suma costos finales {sumFinalCosts}</div>
-            <div>Valor recibido {valorRecibido.toFixed(2)}</div>
-            <div>Valor entregado {valorEntregado.toFixed(2)}</div>
-            <div>TCEA% {TCEA.toFixed(7)}</div>
+            <List component="nav" className={classes.root}>
+              <Grid container spacing={1}>
+                <Grid item xs={6}>
+                  <ListItem divider>
+                    <ListItemText primary="Fecha de Pago" className={classes.labelText}/>
+                    <ListItemSecondaryAction className={classes.resultText}>
+                      {paymentDate}
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                </Grid>
+                <Grid item xs={6}>
+                  <ListItem divider>
+                  <ListItemText primary="# dias" className={classes.labelText}/>
+                    <ListItemSecondaryAction className={classes.resultText}>
+                      {NDias}
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                </Grid>
+                <Grid item xs={6}>
+                  <ListItem divider>
+                  <ListItemText primary="TE%" className={classes.labelText}/>
+                    <ListItemSecondaryAction className={classes.resultText}>
+                      {tasaNDias.toFixed(7) + ' %'}
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                </Grid>
+                <Grid item xs={6}>
+                  <ListItem divider>
+                  <ListItemText primary="d%" className={classes.labelText}/>
+                    <ListItemSecondaryAction className={classes.resultText}>
+                      {tasaDcto.toFixed(7) + ' %'}
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                </Grid>
+                <Grid item xs={6}>
+                  <ListItem divider>
+                  <ListItemText primary="Valor nominal" className={classes.labelText}/>
+                    <ListItemSecondaryAction className={classes.resultText}>
+                      {currency + ' ' + nominalValue.toFixed(2)}
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                </Grid>
+                <Grid item xs={6}>
+                  <ListItem divider>
+                  <ListItemText primary="Descuento" className={classes.labelText}/>
+                    <ListItemSecondaryAction className={classes.resultText}>
+                      {currency + ' ' + dct.toFixed(2)}
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                </Grid>
+                <Grid item xs={6}>
+                  <ListItem divider>
+                  <ListItemText primary="Valor neto" className={classes.labelText}/>
+                    <ListItemSecondaryAction className={classes.resultText}>
+                      {currency + ' ' + valorNeto.toFixed(2)}
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                </Grid>
+                <Grid item xs={6}>
+                  <ListItem divider>
+                  <ListItemText primary="Retencion" className={classes.labelText}/>
+                    <ListItemSecondaryAction className={classes.resultText}>
+                      {currency + ' ' + retention.toFixed(2)}
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                </Grid>
+                <Grid item xs={6}>
+                  <ListItem divider>
+                  <ListItemText primary="Suma costos iniciales" className={classes.labelText}/>
+                    <ListItemSecondaryAction className={classes.resultText}>
+                      {currency + ' ' + sumInitialCosts.toFixed(2)}
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                </Grid>
+                <Grid item xs={6}>
+                  <ListItem divider>
+                  <ListItemText primary="Suma costos finales" className={classes.labelText}/>
+                    <ListItemSecondaryAction className={classes.resultText}>
+                      {currency + ' ' + sumFinalCosts.toFixed(2)}
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                </Grid>
+                <Grid item xs={6}>
+                  <ListItem divider>
+                  <ListItemText primary="Valor recibido" className={classes.labelText}/>
+                    <ListItemSecondaryAction className={classes.resultText}>
+                      {currency + ' ' + valorRecibido.toFixed(2)}
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                </Grid>
+                <Grid item xs={6}>
+                  <ListItem divider>
+                  <ListItemText primary="Valor entregado" className={classes.labelText}/>
+                    <ListItemSecondaryAction className={classes.resultText}>
+                      {currency + ' ' + valorEntregado.toFixed(2)}
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                </Grid>
+                <Grid item xs={6}>
+                  <ListItem divider>
+                  <ListItemText primary="TCEA%" className={classes.labelText}/>
+                    <ListItemSecondaryAction className={classes.resultText}>
+                      {TCEA.toFixed(7) + ' %'}
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                </Grid>
+              </Grid>
+            </List>
+            <Button variant="contained" color="primary" onClick={saveReceipt}>Guardar</Button>
+            <Modal
+                modalTitle={"Guardado"}
+                modalMessage={"¿Esta seguro que desea guardar este recibo?"}
+                open={open}
+                actionButtonText={"No"}
+                handleClickOpen={handleClickOpen}
+                handleClose={handleClose}
+                actionButtonTextConfirm={"Sí"}
+                dataToSave={localStorage.getItem('dataToSave')}
+                actionToSave={'receipt'}
+            />
         </CardContent>
       </Card>
     </div>
