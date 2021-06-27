@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import * as functions from '../../utils/functions'
 
 export const walletSlice = createSlice({
     name: 'wallet',
@@ -30,7 +31,27 @@ export const walletSlice = createSlice({
             state.infoWallet = [...state.infoWallet, action.payload]
         },
         setGeneralResults: (state, action) => {
-            state.results = [...state.results, action.payload]
+            console.log("l", state.infoWallet.length)
+            if(state.infoWallet.length > 0) {
+                const results = {
+                    discount_date: state.rateTermWallet.discount_date,
+                    nominal_value: state.infoWallet[state.infoWallet.length - 1].nominal_value,
+                    /* ND: '',
+                    TE: '',
+                    d: '',
+                    D: '',
+                    Rt: '',
+                    CI: '',
+                    VNet: '',
+                    VR: '',
+                    CF: '',
+                    VE: '',
+                    TCEA: '' */
+                }
+                console.log(results)
+                state.results = [...state.results, results]
+
+            }
         },
     },
 });

@@ -45,7 +45,13 @@ const rrfProps = {
 //Auth user auth loaded
 function AuthIsLoaded({ children }) {
   const auth = useSelector(state => state.firebase.auth);
-  if (!isLoaded(auth)) return <LoadingScreen />;
+  if (!isLoaded(auth)) return (
+    <div className="App">
+      <div className="App-header">
+        <LoadingScreen />
+      </div>
+    </div>
+  );
   return children;
 }
 

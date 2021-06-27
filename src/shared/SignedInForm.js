@@ -161,12 +161,14 @@ const Form = (props) => {
             dispatch(setFinalCostsWallet(finalCostsReceipt))
             dispatch(setRateTermWallet(values))
             dispatch(setInfoWallet(infoReceipt))
+            dispatch(setGeneralResults(infoReceipt))
           }
           dispatch(setReceiptStatus('results'))
           break
         }
         case 'addInfoWallet': {
           dispatch(setInfoWallet(values))
+          dispatch(setGeneralResults(values))
           break
         }
         default:

@@ -52,6 +52,7 @@ const ProcessResultsWalletTable = () => {
 
   const [TCEA, setTCEA] = useState(functions.calcularTCEA(valorEntregado,valorRecibido,NDias,rateTermWallet.year_days)) */
   const { infoReceipt, initialCostsReceipt, finalCostsReceipt, rateTermReceipt } = useSelector((state) => state.receipts)
+  const { results } = useSelector((state) => state.wallets)
   
   const [paymentDate, setPaymentDate] = useState(infoReceipt.payment_date)
   const [discountDate, setDiscountDate] = useState(rateTermReceipt.discount_date)
@@ -78,7 +79,7 @@ const ProcessResultsWalletTable = () => {
     { id: 'n', label: 'Nª', minWidth: 20, align: 'center' },
     { id: 'discount_date', label: 'Fecha de Emisión', minWidth: 50, align: 'center' },
     { id: 'nominal_value', label: 'Valor Nominal', minWidth: 50, align: 'center' },
-    { id: 'ND', label: 'Días transcurridos', minWidth: 100, align: 'center' },
+/*     { id: 'ND', label: 'Días transcurridos', minWidth: 100, align: 'center' },
     { id: 'TE', label: 'TE Nª días', minWidth: 50, align: 'center' },
     { id: 'd', label: 'Tasa descontada Nª días', minWidth: 50, align: 'center' },
     { id: 'D', label: 'Descuento Nª días', minWidth: 50, align: 'center' },
@@ -88,11 +89,11 @@ const ProcessResultsWalletTable = () => {
     { id: 'VR', label: 'Total a Recibir', minWidth: 70, align: 'center' },
     { id: 'CF', label: 'Costes Finales', minWidth: 70, align: 'center' },
     { id: 'VE', label: 'Total a Entregar', minWidth: 70, align: 'center' },
-    { id: 'TCEA', label: 'TCEA', minWidth: 50, align: 'center' },
+    { id: 'TCEA', label: 'TCEA', minWidth: 50, align: 'center' }, */
   ];
 
   const counter = 1
-  const rows = []
+/*   const rows = []
   rows.push({
     n: { id: 'n', value: counter },
     discount_date: { id: 'discount_date', value: discountDate },
@@ -108,6 +109,13 @@ const ProcessResultsWalletTable = () => {
     CF: { id: 'CF', value: sumFinalCosts.toFixed(2) },
     VE: { id: 'VE', value: valorEntregado.toFixed(2) },
     TCEA: { id: 'TCEA', value: TCEA.toFixed(7) }
+  }) */
+  const rows = results.map((e, idx) => {
+    return {
+      n: { id: 'n', value: (idx + 1)},
+      discount_date: { id: 'discount_date', value: e.discount_date },
+      nominal_value: { id: 'nominal_value', value: e.nominal_value },
+    }
   })
 
   const initialValues= {

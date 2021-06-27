@@ -12,7 +12,7 @@ const InfoReceiptSchema = yup.object({
   emission_date: yup.date('Ingrese una fecha válida').required('La fecha de emisión es requerida'),
   payment_date: yup.date('Ingrese una fecha válida').required('La fecha de pago es requerida'),
   nominal_value: yup.number('Debe ingresar un número').required('El monto recibido es requerido').moreThan(0, 'El valor mínimo debe ser mayor a cero'),
-  retention: yup.number('Debe ingresar un número').required('La retención es requerida').moreThan(0, 'El valor mínimo debe ser mayor a cero'),
+  retention: yup.number('Debe ingresar un número').required('La retención es requerida').positive('El valor debe ser positivo o cero').moreThan(-1, 'El valor mínimo es cero'),
 });
 
 const InfoReceipt = () => {
