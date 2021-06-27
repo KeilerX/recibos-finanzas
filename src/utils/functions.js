@@ -16,18 +16,18 @@ export const calcularDiasTranscurridos = (discount_date,payment_date) => { //yyy
     return diff;
 }
 
-export const calcularTasaEfectivaANDiasDeEfectiva = (rate_term,dias_transcurridos,rate_value) => {
+const calcularTasaEfectivaANDiasDeEfectiva = (rate_term,dias_transcurridos,rate_value) => {
+    
     rate_value /= 100;
     return (Math.pow(1+rate_value,dias_transcurridos/rate_term)-1)*100;
 }
 
-//ToDo:
-export const calcularTasaEfectivaANDiasDeNominal = (rate_term,capitalization_term,dias_transcurridos,rate_value) => {
+const calcularTasaEfectivaANDiasDeNominal = (rate_term,capitalization_term,dias_transcurridos,rate_value) => {
+    
     rate_value /= 100;
     let m = rate_term/capitalization_term;
     let n = dias_transcurridos/capitalization_term;
     let rate = Math.pow(1+(rate_value/m),n)-1;
-    console.log("te%:",rate*100);
     return rate*100;
 }
 
@@ -38,6 +38,14 @@ export const calcularTasaEfectivaANDias = (rate_term,dias_transcurridos,rate_val
         return calcularTasaEfectivaANDiasDeNominal(rate_term,capitalization_term,dias_transcurridos,rate_value);
     }
 }
+export const calcularTEA = (dias_por_anio,rate_term,rate_value,capitalization_term) => {
+    if (localStorage.getItem("rate_type") === "Tasa Efectiva"){
+        return calcularTasaEfectivaANDiasDeEfectiva(rate_term,dias_por_anio,rate_value);
+    }else{
+        return calcularTasaEfectivaANDiasDeNominal(rate_term,capitalization_term,dias_por_anio,rate_value);
+    }
+}
+
 
 export const calcularTasaEfectivaDescuentoANDias = (tasa_efectiva_a_n_dias) => {
     tasa_efectiva_a_n_dias /= 100;
@@ -65,7 +73,6 @@ export const calcularSumaCostos= (costos, nominal_value) => {
     return suma_costos;
 }
 
-//localStorage.getItem(“rate_type”)
 export const calcularValorRecibido = (valor_neto,suma_costos_iniciales,retention) =>{
     return valor_neto-suma_costos_iniciales-retention;
 }
@@ -77,4 +84,53 @@ export const calcularValorEntregado = (valor_nominal,suma_costos_finales,retenti
 export const calcularTCEA = (valor_entregado,valor_recibido,dias_transcurridos,dias_por_anio) =>{
     let rate = Math.pow(valor_entregado/valor_recibido,dias_por_anio/dias_transcurridos)-1;
     return rate*100;
+}
+
+export const walletGetRow = (infoWallet, rateTermWallet, initialCostsWallet, finalCostsWallet) => {
+    
+    console.log(infoWallet, rateTermWallet, initialCostsWallet, finalCostsWallet);
+    let last = infoWallet.length-1;
+    let n=last+1;
+    let discount_date = rateTermWallet.discount_date;
+    let nominal_value = infoWallet[last].nominal_value;
+    let ND = calcularDiasTranscurridos(discount_date,infoWallet[last].payment_date);
+    let TE = calcularTasaEfectivaANDias(rateTermWallet.rate_term,ND,rateTermWallet.rate_value,rateTermWallet.capitalization_term);
+    let d = calcularTasaEfectivaDescuentoANDias(TE);
+    let D = calcularDescuentoANDias(d,nominal_value);
+    let Rt = infoWallet[last].retention;
+    let CI = calcularSumaCostos(initialCostsWallet, nominal_value);
+    let VNet=calcularValorNeto(nominal_value,D);
+    let VR = calcularValorRecibido(VNet,CI,Rt);
+    let CF=calcularSumaCostos(finalCostsWallet, nominal_value);
+    let VE=calcularValorEntregado(nominal_value,CI,Rt);
+    let TCEA=calcularTCEA(VE,VR,ND,rateTermWallet.year_days);
+    
+    let receipt = {
+        n:n,
+        discount_date:discount_date,
+        nominal_value:nominal_value,
+        ND:ND,
+        TE:TE.toFixed(7),
+        d:d.toFixed(7),
+        D:D.toFixed(2),
+        Rt:Rt.toFixed(2),
+        CI:CI.toFixed(2),
+        VNet:VNet.toFixed(2),
+        VR:VR.toFixed(2),
+        CF:CF.toFixed(2),
+        VE:VE.toFixed(2),
+        TCEA:TCEA.toFixed(7)
+    }
+    console.log("receipt", receipt);
+    return receipt;
+}
+
+export const walletGetValorRecibido = (wallet) => {
+
+    let sum = 0;
+    wallet.forEach((receipt) => {sum+=receipt.VR});
+    console.log(`sum: ${sum}`);
+    return sum;
+}
+export const walletGetTCEA = (wallet) => {
 }
