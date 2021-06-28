@@ -126,6 +126,11 @@ const SingedInLinks = () => {
     history.push("/receipt-table")
   }
 
+  const toMyWallets = (e) => {
+    cleanLocalStorage()
+    history.push("/wallet-table")
+  }
+
   return (
     <div className={classes.root}>
       <AppBar
@@ -179,6 +184,10 @@ const SingedInLinks = () => {
           <ListItem button onClick={e => toMyReceipts(e)}>
             <ListItemIcon><ReceiptIcon /></ListItemIcon>
             <ListItemText primary="Mis Recibos" />
+          </ListItem>
+          <ListItem button onClick={e => toMyWallets(e)}>
+            <ListItemIcon><AccountBalanceWalletIcon /></ListItemIcon>
+            <ListItemText primary="Mis Carteras" />
           </ListItem>
           <ListItem button onClick={e => toCurrency(e)}>
             <ListItemIcon><MonetizationOnIcon /></ListItemIcon>

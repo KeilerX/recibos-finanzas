@@ -15,6 +15,9 @@
 
 .App-header {
   background-color: #282c34;
+  background: url('../src/assets/bg1.webp') no-repeat top center fixed;
+  -webkit-background-size: cover;
+  background-size: cover;
   min-height: 100vh;
   display: flex;
   flex-direction: column;

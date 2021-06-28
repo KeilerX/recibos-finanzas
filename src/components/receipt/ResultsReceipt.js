@@ -1,25 +1,25 @@
 import React, { useState } from 'react'
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
+import { makeStyles } from '@material-ui/core/styles'
+import Card from '@material-ui/core/Card'
+import CardContent from '@material-ui/core/CardContent'
+import CardHeader from '@material-ui/core/CardHeader'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemText from '@material-ui/core/ListItemText'
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
+import Grid from '@material-ui/core/Grid'
+import Button from '@material-ui/core/Button'
 
-import { Link, Redirect } from 'react-router-dom';
-import { useHistory } from "react-router-dom";
-import { useDispatch, useSelector } from 'react-redux';
+import { Redirect } from 'react-router-dom'
+import { useHistory } from "react-router-dom"
+import { useDispatch, useSelector } from 'react-redux'
 import * as functions from '../../utils/functions'
-import { createReceipt } from '../../store/actions/dbSaveActions'
 import Modal from '../../shared/Modal'
 
 const useStyles = makeStyles({
   root: {
     maxWidth: 800,
+    opacity: 0.90,
   },
   textField: {
     marginRight: '10px',
@@ -37,7 +37,7 @@ const useStyles = makeStyles({
   resultText: {
     fontSize: 15,
   }
-});
+})
 
 const ResultsReceipt = () => {
   const classes = useStyles()
@@ -50,6 +50,7 @@ const ResultsReceipt = () => {
   
   const [paymentDate, setPaymentDate] = useState(infoReceipt.payment_date)
   const [discountDate, setDiscountDate] = useState(rateTermReceipt.discount_date)
+  const [TEA, setTEA] = useState(functions.calcularTEA(rateTermReceipt.year_days, rateTermReceipt.rate_term, rateTermReceipt.rate_value, rateTermReceipt.capitalization_term))
   const [NDias, setNDias] = useState(functions.calcularDiasTranscurridos(discountDate, paymentDate))
    
   const [tasaNDias, setTasaNDias] = useState(functions.calcularTasaEfectivaANDias(rateTermReceipt.rate_term,NDias,rateTermReceipt.rate_value,rateTermReceipt.capitalization_term))
@@ -73,7 +74,7 @@ const ResultsReceipt = () => {
 
   const saveReceipt = () => {
   const  newReceipt = {
-      //TEA: TEA,
+      TEA: TEA,
       ND: NDias,
       TE: parseFloat(tasaNDias.toFixed(7)),
       d: parseFloat(tasaDcto.toFixed(7)),
@@ -130,6 +131,14 @@ const ResultsReceipt = () => {
                   <ListItemText primary="# dias" className={classes.labelText}/>
                     <ListItemSecondaryAction className={classes.resultText}>
                       {NDias}
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                </Grid>
+                <Grid item xs={6}>
+                  <ListItem divider>
+                  <ListItemText primary="TEA%" className={classes.labelText}/>
+                    <ListItemSecondaryAction className={classes.resultText}>
+                      {TEA.toFixed(7) + ' %'}
                     </ListItemSecondaryAction>
                   </ListItem>
                 </Grid>

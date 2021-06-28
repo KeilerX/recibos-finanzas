@@ -22,11 +22,13 @@ const useStyles = makeStyles({
   textField: {
     marginRight: '10px',
     marginTop: '10px',
-    marginBottom: '10px'
+    marginBottom: '10px',
   },
   titleCard: {
     marginTop: '10px',
-    textAlign: 'center'
+    textAlign: 'center',
+    marginBottom: '-15px',
+    color: '#3f51b5',
   }
 });
 

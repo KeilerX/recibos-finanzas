@@ -1,12 +1,23 @@
-import { React, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useFirestore, useFirestoreConnect } from 'react-redux-firebase';
-import { Redirect } from 'react-router-dom';
-import { getFirestore } from 'redux-firestore';
-import LoadingScreen from '../../layout/loading_screen/LoadingScreen';
+import React from 'react'
+import { useSelector } from 'react-redux'
+import { makeStyles } from '@material-ui/core/styles'
+import { Redirect } from 'react-router-dom'
+import LoadingScreen from '../../layout/loading_screen/LoadingScreen'
+
+const useStyles = makeStyles(() => ({
+  root: {
+    width: '100%',
+    overflowX: 'hidden',
+    backgroundColor: 'white',
+    color: 'black',
+    padding: 10,
+    opacity: 0.90,
+    borderRadius: 5,
+  },
+}))
 
 const Home = () => {
-
+  const classes = useStyles()
   const { auth } = useSelector((state) => state.firebase);
   const { profile } = useSelector((state) => state.firebase);
 
@@ -16,7 +27,7 @@ const Home = () => {
   return (
     <div>
       { !profile.isEmpty ?
-        <div >
+        <div className={classes.root}>
           Hola, bienvenido(a), {profile.firstName + ' ' + profile.lastName}
         </div>
         : <LoadingScreen />}

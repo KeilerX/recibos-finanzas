@@ -11,17 +11,34 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { setReceiptStatus } from '../../store/reducers/receiptReducer';
  
 const useStyles = makeStyles((theme) => ({
-    select: {
-      marginTop: theme.spacing(2),
-      display: "flex",
-      flexWrap: "wrap",
-      color: "black",
-      backgroundColor: "#eee"
-    },
-    button: {
-        marginTop: "10px",
-    },
-}));
+  root: {
+    width: '100%',
+    overflowX: 'hidden',
+    backgroundColor: 'white',
+    color: 'black',
+    padding: '20px 20px 20px 20px',
+    borderRadius: 5,
+    opacity: 0.90,
+  },
+  title: {
+    color: '#3f51b5',
+    textAlign: 'center',
+    fontSize: '30px',
+  },
+  text: {
+    fontSize: '25px',
+  },
+  select: {
+    marginTop: theme.spacing(2),
+    display: 'flex',
+    flexWrap: 'wrap',
+    color: 'black',
+    backgroundColor: 'white',
+  },
+  button: {
+    marginTop: '20px',
+  },
+}))
 
 const CheckCurrency = () => {
   const classes = useStyles();
@@ -60,11 +77,11 @@ const CheckCurrency = () => {
 
   return (
     <div>
-      { !profile.isEmpty ?
+      {!profile.isEmpty ?
         <div>
           {currencies ? 
-            <div>
-                <h3>Selecciona la moneda con la que se trabajará</h3>
+            <div className={classes.root}>
+                <div className={classes.title}>Selecciona la moneda con la que se trabajará</div>
                 <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
@@ -84,11 +101,11 @@ const CheckCurrency = () => {
                 </Button> : null
                 }
             </div> :
-            <div>
-                <h2>Aviso</h2>
-                <p>No cuenta con ninguna moneda registrada</p>
-                <p>Para poder continuar debe registrar una moneda.</p>
-                <Button variant="contained" color="secondary" onClick={e => history.push('/create-currency')}>
+            <div className={classes.root}>
+                <div className={classes.title}>Aviso</div>
+                <div className={classes.text}>No cuenta con ninguna moneda registrada</div>
+                <div className={classes.text}>Para poder continuar debe registrar una moneda.</div>
+                <Button variant="contained" color="secondary" onClick={e => history.push('/create-currency')} className={classes.button}>
                     Agregar Moneda
                 </Button>
             </div>}

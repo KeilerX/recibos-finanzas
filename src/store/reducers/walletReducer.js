@@ -31,26 +31,25 @@ export const walletSlice = createSlice({
             state.infoWallet = [...state.infoWallet, action.payload]
         },
         setGeneralResults: (state, action) => {
-            console.log("l", state.infoWallet.length)
+            const calculatedResults = functions.walletGetRow(state.infoWallet, state.rateTermWallet, state.initialCostsWallet, state.finalCostsWallet)
             if(state.infoWallet.length > 0) {
                 const results = {
-                    discount_date: state.rateTermWallet.discount_date,
-                    nominal_value: state.infoWallet[state.infoWallet.length - 1].nominal_value,
-                    /* ND: '',
-                    TE: '',
-                    d: '',
-                    D: '',
-                    Rt: '',
-                    CI: '',
-                    VNet: '',
-                    VR: '',
-                    CF: '',
-                    VE: '',
-                    TCEA: '' */
+                    n: calculatedResults.n,
+                    discount_date: calculatedResults.discount_date,
+                    nominal_value: calculatedResults.nominal_value,
+                    ND: parseFloat(calculatedResults.ND),
+                    TE: parseFloat(calculatedResults.TE),
+                    d: parseFloat(calculatedResults.d),
+                    D: parseFloat(calculatedResults.D),
+                    Rt: parseFloat(calculatedResults.Rt),
+                    CI: parseFloat(calculatedResults.CI),
+                    VNet: parseFloat(calculatedResults.VNet),
+                    VR: parseFloat(calculatedResults.VR),
+                    CF: parseFloat(calculatedResults.CF),
+                    VE: parseFloat(calculatedResults.VE),
+                    TCEA: parseFloat(calculatedResults.TCEA)
                 }
-                console.log(results)
                 state.results = [...state.results, results]
-
             }
         },
     },

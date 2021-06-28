@@ -7,10 +7,9 @@ import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { useTheme } from '@material-ui/core/styles'
-import { createReceipt } from '../store/actions/dbSaveActions'
-import { Link, Redirect } from 'react-router-dom'
+import { createReceipt, createWallet } from '../store/actions/dbSaveActions'
 import { useHistory } from "react-router-dom"
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 const Modal = (props) => {
   const theme = useTheme()
@@ -24,9 +23,14 @@ const Modal = (props) => {
   const doAction = () => {
     if(props.actionToSave === 'receipt') {
       if(props.dataToSave) {
-        console.log(JSON.parse(props.dataToSave))
         dispatch(createReceipt(JSON.parse(props.dataToSave)))
         history.push('/receipt-table')
+      }
+    }
+    if(props.actionToSave === 'wallet') {
+      if(props.dataToSave) {
+        dispatch(createWallet(JSON.parse(props.dataToSave)))
+        history.push('/wallet-table')
       }
     }
   }

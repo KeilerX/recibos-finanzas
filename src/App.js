@@ -9,6 +9,8 @@ import Currency from './components/currency/Currency'
 import CheckCurrency from './components/currency/CheckCurrency'
 import Receipt from './components/receipt/Receipt'
 import TableReceipt from './components/receipt/TableReceipt'
+import TableWallet from './components/receipt/TableWallet'
+import ResultsWallet from './components/receipt/ResultsWallet'
 
 function App() {
   return (
@@ -25,6 +27,8 @@ function App() {
             <Route path="/create-currency"><CreateCurrency /></Route>
             <Route path="/receipt"><Receipt /></Route>
             <Route path="/receipt-table"><TableReceipt /></Route>
+            <Route path="/wallet-table"><TableWallet/></Route>
+            <Route path="/wallet/:id"><ResultsWallet/></Route>
           </Switch>
         </header>
       </div>

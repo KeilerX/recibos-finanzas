@@ -55,13 +55,14 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: 700,
     marginLeft: 50,
     marginRight: 50,
-    opacity: 0.85,
+    opacity: 0.90,
   },
   subRoot: {
     width: '40%',
     margin: 'auto',
     overflowX: 'hidden',
     marginTop: 80,
+    opacity: 0.90,
   },
   textField: {
     marginRight: 10,
@@ -71,6 +72,7 @@ const useStyles = makeStyles((theme) => ({
   },
   titleCard: {
     marginTop: 10,
+    color: '#3f51b5',
     textAlign: 'center'
   },
   helpIcon: {

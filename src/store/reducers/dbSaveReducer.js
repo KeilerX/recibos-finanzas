@@ -1,11 +1,19 @@
 const initState = {};
 const dbSaveReducer = (state = initState, action) => {
     switch(action.type) {
-        case '':
+        case 'RECEIPT_CREATED':
             return {
                 ...state
             }
-        case 'CURRENCY_CREATION_ERROR':
+        case 'RECEIPT_CREATION_ERROR':
+            return {
+                ...state
+            }
+        case 'WALLET_CREATED':
+            return {
+                ...state
+            }
+        case 'WALLET_CREATION_ERROR':
             return {
                 ...state
             }
