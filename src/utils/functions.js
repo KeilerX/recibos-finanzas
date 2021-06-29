@@ -109,7 +109,7 @@ export const walletGetRow = (infoWallet, rateTermWallet, initialCostsWallet, fin
     let VNet=calcularValorNeto(nominal_value,D);
     let VR = calcularValorRecibido(VNet,CI,Rt);
     let CF=calcularSumaCostos(finalCostsWallet, nominal_value);
-    let VE=calcularValorEntregado(nominal_value,CI,Rt);
+    let VE=calcularValorEntregado(nominal_value,CF,Rt);
     let TCEA=calcularTCEA(VE,VR,ND,rateTermWallet.year_days);
     
     let receipt = {
