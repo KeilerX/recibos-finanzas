@@ -1,3 +1,5 @@
+
+
 export const newDate = () => {
     let date = new Date();
     let day = date.getDate();
@@ -12,14 +14,17 @@ export const calcularDiasTranscurridos = (discount_date,payment_date) => { //yyy
     let fecha_de_descuento = new Date(discount_date);
     let fecha_de_pago = new Date(payment_date);
     let diff = ((fecha_de_pago-fecha_de_descuento)/(24 * 60 * 60 * 1000));
-    //console.log(`FDCTO: ${fecha_de_descuento} - FPAGO: ${fecha_de_pago} = DIFF: ${diff}`);
+    console.log(`FDCTO: ${fecha_de_descuento} - FPAGO: ${fecha_de_pago} = DIFF: ${diff}`);
     return diff;
 }
 
 const calcularTasaEfectivaANDiasDeEfectiva = (rate_term,dias_transcurridos,rate_value) => {
     
     rate_value /= 100;
-    return (Math.pow(1+rate_value,dias_transcurridos/rate_term)-1)*100;
+    let res =Math.pow(1+rate_value,dias_transcurridos/rate_term);
+    res = (res-1)*100;
+    console.log(`TE de E: ${res}`);
+    return res;
 }
 
 const calcularTasaEfectivaANDiasDeNominal = (rate_term,capitalization_term,dias_transcurridos,rate_value) => {
@@ -27,8 +32,10 @@ const calcularTasaEfectivaANDiasDeNominal = (rate_term,capitalization_term,dias_
     rate_value /= 100;
     let m = rate_term/capitalization_term;
     let n = dias_transcurridos/capitalization_term;
-    let rate = Math.pow(1+(rate_value/m),n)-1;
-    return rate*100;
+    let res = Math.pow(1+(rate_value/m),n)-1;
+    res *= 100;
+    console.log(`TE de N: ${res}`);
+    return res;
 }
 
 export const calcularTasaEfectivaANDias = (rate_term,dias_transcurridos,rate_value,capitalization_term) => {
@@ -132,5 +139,43 @@ export const walletGetValorRecibido = (wallet) => {
     console.log(`sum: ${sum}`);
     return sum;
 }
-export const walletGetTCEA = (wallet) => {
+
+
+export const walletGetTCEA = (wallet, sumVR) => {
+    let receipts = [];
+    wallet.forEach((receipt) => {receipts.push([receipt.VE,receipt.ND])});
+    console.log(receipts);
+
+    let valorTotalRecibir = sumVR;
+
+    let F = 1;
+    let a = 0;
+    let b = 2*F/360;
+    let tir_p = 0;
+    let tcea = 0;
+    let tir_a = 0;
+    let c;
+    let valc;
+
+    for (let i=0; i<1000; i++){
+        valc = 0;
+        c = (a+b)/2;
+        for (let j=0; j<receipts.length; j++)
+            valc += receipts[j][0]/((1+c)**receipts[j][1]);
+
+        if(valc < valorTotalRecibir){
+            b = c;
+        }else{
+            a = c;
+        }
+
+        if(Math.abs(valc-valorTotalRecibir) < 0.001) {
+            tir_p = c;
+            tir_a = tir_p*360/F;
+            tcea = (1+(tir_a*F)/360)**360 - 1;
+            break;
+        }
+    }
+
+    return tcea*100;
 }
