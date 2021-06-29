@@ -36,7 +36,7 @@ const useStyles = makeStyles({
   },
   resultText: {
     fontSize: 15,
-  }
+  },
 })
 
 const ResultsReceipt = () => {
@@ -94,13 +94,13 @@ const ResultsReceipt = () => {
     console.log(newReceipt)
   }
 
-  const [open, setOpen] = useState(false) //needed to open modal
+  const [open, setOpen] = useState(false) 
 
-  const handleClickOpen = () => { //needed to open modal
+  const handleClickOpen = () => {
     setOpen(true)
   };
 
-  const handleClose = () => { //needed to open modal
+  const handleClose = () => {
     setOpen(false)
   };
 

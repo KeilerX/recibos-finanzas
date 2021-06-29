@@ -65,17 +65,17 @@ const ResultsWallet = () => {
     return {
       n: { id: 'n', value: e.n },
       discount_date: { id: 'discount_date', value: e.discount_date },
-      nominal_value: { id: 'nominal_value', value: e.nominal_value },
+      nominal_value: { id: 'nominal_value', value: currency + ' ' +  e.nominal_value.toFixed(2).toString() },
       ND: { id: 'ND', value: e.ND },
       TE: { id: 'TE', value: e.TE.toString() + '%'},
       d: { id: 'd', value: e.d.toString() + '%' },
-      D: { id: 'D', value: currency + e.D.toString() },
-      Rt: { id: 'Rt', value: currency + e.Rt.toString() },
-      CI: { id: 'CI', value: currency + e.CI.toString() },
-      VNet: { id: 'VNet', value: currency + e.VNet.toString() },
-      VR: { id: 'VR', value: currency + e.VR.toString() },
-      CF: { id: 'CF', value: currency + e.CF.toString() },
-      VE: { id: 'VE', value: currency + e.VE.toString() },
+      D: { id: 'D', value: currency + ' ' + e.D.toFixed(2).toString() },
+      Rt: { id: 'Rt', value: currency + ' ' + e.Rt.toFixed(2).toString() },
+      CI: { id: 'CI', value: currency + ' ' + e.CI.toFixed(2).toString() },
+      VNet: { id: 'VNet', value: currency + ' ' + e.VNet.toFixed(2).toString() },
+      VR: { id: 'VR', value: currency + ' ' + e.VR.toFixed(2).toString() },
+      CF: { id: 'CF', value: currency + ' ' + e.CF.toFixed(2).toString() },
+      VE: { id: 'VE', value: currency + ' ' + e.VE.toFixed(2).toString() },
       TCEA: { id: 'TCEA', value: e.TCEA.toString() + '%'}
     }
   })

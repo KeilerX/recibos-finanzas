@@ -8,6 +8,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import Grid from '@material-ui/core/Grid'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemText from '@material-ui/core/ListItemText'
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import Button from '@material-ui/core/Button'
 
 import Form from '../../shared/SignedInForm'
@@ -31,6 +35,12 @@ const useStyles = makeStyles((theme) => ({
     button: {
       marginTop: '10px',
     },
+    labelText: {
+      fontSize: 18,
+    },
+    resultText: {
+      fontSize: 15,
+    },
 }))
 
 const InfoReceiptSchema = yup.object({
@@ -44,12 +54,13 @@ const ProcessResultsWalletTable = () => {
   const classes = useStyles()
   const { auth } = useSelector((state) => state.firebase);
 
-  const { results } = useSelector((state) => state.wallets)
+  const { results, walletResults } = useSelector((state) => state.wallets)
   
   const columns = [
     { id: 'n', label: 'Nª', minWidth: 20, align: 'center' },
     { id: 'discount_date', label: 'Fecha de Descuento', minWidth: 50, align: 'center' },
-    { id: 'nominal_value', label: 'Valor Nominal', minWidth: 50, align: 'center' },     { id: 'ND', label: 'Días transcurridos', minWidth: 100, align: 'center' },
+    { id: 'nominal_value', label: 'Valor Nominal', minWidth: 50, align: 'center' },
+    { id: 'ND', label: 'Días transcurridos', minWidth: 100, align: 'center' },
     { id: 'TE', label: 'TE Nª días', minWidth: 50, align: 'center' },
     { id: 'd', label: 'Tasa descontada Nª días', minWidth: 50, align: 'center' },
     { id: 'D', label: 'Descuento Nª días', minWidth: 50, align: 'center' },
@@ -85,8 +96,8 @@ const ProcessResultsWalletTable = () => {
 
   const saveWallet = () => {
     const newWallet = {
-      VRWallet: 20000,
-      TCEAWallet: 12.1234567,
+      VRWallet: walletResults.VRWallet.toFixed(2),
+      TCEAWallet: walletResults.TCEAWallet.toFixed(7),
       results: results,
       currency: currency,
       uid: auth.uid,
@@ -96,13 +107,13 @@ const ProcessResultsWalletTable = () => {
     console.log(newWallet)
   }
 
-  const [open, setOpen] = useState(false) //needed to open modal
+  const [open, setOpen] = useState(false)
 
-  const handleClickOpen = () => { //needed to open modal
+  const handleClickOpen = () => {
     setOpen(true)
   };
 
-  const handleClose = () => { //needed to open modal
+  const handleClose = () => {
     setOpen(false)
   };
 
@@ -159,10 +170,26 @@ const ProcessResultsWalletTable = () => {
           />
           <Card className={classes.card}>
             <CardContent>
-              <div>
-              Valor Recibo de la Cartera: {100000}
-              TCEA de la Cartera: {1000000}
-              </div>
+            <List component="nav" className={classes.root}>
+              <Grid container spacing={1}>
+                <Grid item xs={6}>
+                  <ListItem divider>
+                    <ListItemText primary="Valor Recibo de la Cartera" className={classes.labelText}/>
+                    <ListItemSecondaryAction className={classes.resultText}>
+                      {currency + ' ' + walletResults.VRWallet.toFixed(2)}
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                </Grid>
+                <Grid item xs={6}>
+                  <ListItem divider>
+                  <ListItemText primary="TCEA de la Cartera" className={classes.labelText}/>
+                    <ListItemSecondaryAction className={classes.resultText}>
+                      {walletResults.TCEAWallet.toFixed(7) + '%'}
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                </Grid>
+                </Grid>
+            </List>
                 <Button variant="contained" color="primary" onClick={saveWallet} className={classes.button}>Guardar</Button>
               <Modal
                 modalTitle={"Guardado"}

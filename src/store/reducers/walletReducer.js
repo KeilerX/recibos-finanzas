@@ -50,6 +50,14 @@ export const walletSlice = createSlice({
                     TCEA: parseFloat(calculatedResults.TCEA)
                 }
                 state.results = [...state.results, results]
+                //const VRWallet = functions.walletGetValorRecibido(state.results)
+                //const TCEAWallet = functions.walletGetTCEA(state.results, VRWallet)
+                const Wallet = {
+                    VRWallet: functions.walletGetValorRecibido(state.results),
+                    TCEAWallet: functions.walletGetTCEA(state.results, functions.walletGetValorRecibido(state.results))
+                }
+                console.log(Wallet)
+                state.walletResults = Wallet
             }
         },
     },
