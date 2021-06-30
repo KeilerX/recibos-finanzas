@@ -100,6 +100,7 @@ export const walletGetRow = (infoWallet, rateTermWallet, initialCostsWallet, fin
     let n=last+1;
     let discount_date = rateTermWallet.discount_date;
     let nominal_value = infoWallet[last].nominal_value;
+    let TEA = calcularTEA(rateTermWallet.year_days,rateTermWallet.rate_term,rateTermWallet.rate_value,rateTermWallet.capitalization_term);
     let ND = calcularDiasTranscurridos(discount_date,infoWallet[last].payment_date);
     let TE = calcularTasaEfectivaANDias(rateTermWallet.rate_term,ND,rateTermWallet.rate_value,rateTermWallet.capitalization_term);
     let d = calcularTasaEfectivaDescuentoANDias(TE);
@@ -116,6 +117,7 @@ export const walletGetRow = (infoWallet, rateTermWallet, initialCostsWallet, fin
         n:n,
         discount_date:discount_date,
         nominal_value:nominal_value,
+        TEA: TEA,
         ND:ND,
         TE:TE.toFixed(7),
         d:d.toFixed(7),
