@@ -96,8 +96,8 @@ const ProcessResultsWalletTable = () => {
 
   const saveWallet = () => {
     const newWallet = {
-      VRWallet: parseFloat(walletResults.VRWallet.toFixed(2)),
-      TCEAWallet: parseFloat(walletResults.TCEAWallet.toFixed(7)),
+      VRWallet: walletResults.VRWallet.toFixed(2),
+      TCEAWallet: walletResults.TCEAWallet.toFixed(7),
       results: results,
       currency: currency,
       uid: auth.uid,

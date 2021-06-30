@@ -54,7 +54,7 @@ const ResultsWallet = () => {
   const columns = [
     { id: 'n', label: 'Nª', minWidth: 20, align: 'center' },
     { id: 'discount_date', label: 'Fecha de Descuento', minWidth: 50, align: 'center' },
-    { id: 'nominal_value', label: 'Valor Nominal', minWidth: 50, align: 'center' },     
+    { id: 'nominal_value', label: 'Valor Nominal', minWidth: 50, align: 'center' }, 
     { id: 'ND', label: 'Días transcurridos', minWidth: 100, align: 'center' },
     { id: 'TE', label: 'TE Nª días', minWidth: 50, align: 'center' },
     { id: 'd', label: 'Tasa descontada Nª días', minWidth: 50, align: 'center' },
