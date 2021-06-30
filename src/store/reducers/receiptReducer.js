@@ -26,6 +26,10 @@ export const receiptSlice = createSlice({
         setMessageInitialCostsReceipt: (state, action) => {
             state.messageInitialCostsReceipt = action.payload
         },
+        setClearReceiptState: (state) => {
+            state.initialCostsReceipt = []
+            state.finalCostsReceipt = []
+        },
         setInitialCostsReceipts: (state, action) => {
             if(state.initialCostsReceipt) {
                 if(state.initialCostsReceipt.some(e => e.reason === action.payload.reason)) {
@@ -82,6 +86,7 @@ export const { setReceiptStatus,
                setMessageFinalCostsReceipt,
                removeFinalCostsReceipt,
                setRateTermReceipt,
+               setClearReceiptState,
             } = receiptSlice.actions
 
 export default receiptSlice.reducer

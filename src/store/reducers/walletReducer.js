@@ -15,6 +15,17 @@ export const walletSlice = createSlice({
         results: [],
     },
     reducers: {
+        setClearWalletState: (state) => {
+            state.infoWallet = []
+            state.initialCostsWallet = []
+            state.finalCostsWallet = []
+            state.results = []
+            state.rateTermWallet = []
+            state.walletResults = {
+                VRWallet: null,
+                TCEAWallet: null,
+            }
+        },
         setWalletResults: (state, action) => {
             state.walletResults = action.payload
         },
@@ -68,6 +79,7 @@ export const { setInitialCostsWallet,
                setRateTermWallet,
                setWalletResults,
                setInfoWallet,
-               setGeneralResults } = walletSlice.actions
+               setGeneralResults,
+               setClearWalletState } = walletSlice.actions
 
 export default walletSlice.reducer

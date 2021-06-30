@@ -6,8 +6,9 @@ import { makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
-import { setReceiptStatus } from '../../store/reducers/receiptReducer'
- 
+import { setReceiptStatus, setClearReceiptState } from '../../store/reducers/receiptReducer'
+import { setClearWalletState } from '../../store/reducers/walletReducer'
+
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
@@ -59,6 +60,8 @@ const CheckRateType = () => {
   }
 
   const to = e => {
+    dispatch(setClearReceiptState())
+    dispatch(setClearWalletState())
     dispatch(setReceiptStatus('info'))
     history.push("/receipt")
   }

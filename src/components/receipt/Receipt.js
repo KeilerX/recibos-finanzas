@@ -61,7 +61,6 @@ const Receipt = () => {
         (receiptStatus === 'results' && operationType === 'receipt') ? <ResultsReceipt /> :
         (receiptStatus === 'results' && operationType === 'wallet') ? <ProcessResultsWalletTable /> : null
         }
-        {/* <NominalRateTermReceipt /> */}
       </div>
     : <LoadingScreen />}
     </div>

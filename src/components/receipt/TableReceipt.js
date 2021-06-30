@@ -38,7 +38,7 @@ const TableReceipt = () => {
   const myReceipts = [];
   for(const r in receipts) {
     myReceipts.push({
-      TEA: { value: receipts[r].TEA ? receipts[r].TEA.toString() : 0 + '%', id: 'TEA' },
+      TEA: { value: receipts[r].TEA.toString() + '%', id: 'TEA' },
       ND: { value: receipts[r].ND, id: 'ND' },
       TE: { value: receipts[r].TE.toString() + '%', id: 'TE' },
       d: { value: receipts[r].d.toString() + '%', id: 'd' },

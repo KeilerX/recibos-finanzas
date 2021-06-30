@@ -74,7 +74,7 @@ const ResultsReceipt = () => {
 
   const saveReceipt = () => {
   const  newReceipt = {
-      TEA: TEA,
+      TEA: parseFloat(TEA.toFixed(7)),
       ND: NDias,
       TE: parseFloat(tasaNDias.toFixed(7)),
       d: parseFloat(tasaDcto.toFixed(7)),
