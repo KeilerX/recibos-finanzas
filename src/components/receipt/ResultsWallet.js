@@ -8,8 +8,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import Grid from '@material-ui/core/Grid'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
-import CardActions from '@material-ui/core/CardActions';
+import CardActions from '@material-ui/core/CardActions'
 import Button from '@material-ui/core/Button'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemText from '@material-ui/core/ListItemText'
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 
 import Form from '../../shared/SignedInForm'
 import TableCustom from '../../shared/TableCustom'
@@ -31,6 +35,12 @@ const useStyles = makeStyles((theme) => ({
     },
     button: {
       marginTop: '10px',
+    },
+    labelText: {
+      fontSize: 18,
+    },
+    resultText: {
+      fontSize: 15,
     },
 }))
 
@@ -90,10 +100,26 @@ const ResultsWallet = () => {
         <Grid item xs={12}>
           <Card className={classes.card}>
             <CardContent>
-              <div>
-              Valor Recibo de la Cartera: {100000}
-              TCEA de la Cartera: {1000000}
-              </div>
+            <List component="nav" className={classes.root}>
+              <Grid container spacing={1}>
+                <Grid item xs={6}>
+                  <ListItem divider>
+                    <ListItemText primary="Valor Recibo de la Cartera" className={classes.labelText}/>
+                    <ListItemSecondaryAction className={classes.resultText}>
+                      {currency + ' ' + myWallets.VRWallet.toFixed(2)}
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                </Grid>
+                <Grid item xs={6}>
+                  <ListItem divider>
+                  <ListItemText primary="TCEA de la Cartera" className={classes.labelText}/>
+                    <ListItemSecondaryAction className={classes.resultText}>
+                      {myWallets.TCEAWallet.toFixed(7) + '%'}
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                </Grid>
+                </Grid>
+            </List>
             </CardContent>
           </Card>
         </Grid>

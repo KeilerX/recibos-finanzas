@@ -90,8 +90,7 @@ const SingedInLinks = () => {
     }
   }
 
-  const logout = (e) => {
-    e.preventDefault();
+  const toLogout = (e) => {
     cleanLocalStorage();
     dispatch(logout());
   }
@@ -193,7 +192,7 @@ const SingedInLinks = () => {
             <ListItemIcon><MonetizationOnIcon /></ListItemIcon>
             <ListItemText primary="Mis Monedas" />
           </ListItem>
-          <ListItem button onClick={e => logout(e)}>
+          <ListItem button onClick={(e) => toLogout(e)}>
             <ListItemIcon><ExitToAppIcon /></ListItemIcon>
             <ListItemText primary="Cerrar Sesión" />
           </ListItem>
